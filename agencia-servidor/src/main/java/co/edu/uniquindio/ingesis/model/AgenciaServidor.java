@@ -34,14 +34,9 @@ public class AgenciaServidor {
     List<Client> clients;
     List<Admin> admins;
 
-    @Getter
-    private final ResourceBundle resourceBundle;
-
     private static AgenciaServidor agenciaServidor;
 
     public AgenciaServidor() {
-
-        this.resourceBundle = ResourceBundle.getBundle("textos");
 
         try {
 
@@ -104,7 +99,6 @@ public class AgenciaServidor {
         }).start();
 
 
-
         //Cargar admins
 
         new Thread(() -> {
@@ -114,8 +108,6 @@ public class AgenciaServidor {
             this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
 
         }).start();
-
-
 
     }
 
@@ -151,10 +143,10 @@ public class AgenciaServidor {
         archiveUtils.serializerObjet("src/main/resources/persistencia/reservations.ser", reservations);
     }
 
-    /**
+    /*
      * Primer método adicional
-     * @param client
      */
+
     public void recompensasPorReservas(Client client){
 
         if (client.getReservationList().size() > 2){
@@ -465,7 +457,7 @@ public class AgenciaServidor {
 
     }
 
-    public void eliminarDestinoName(Optional<TouristPackage> touristPackage, String destinoABorrar){
+    public void eliminarDestinoName(Optional<TouristPackage> touristPackage, String destinoABorrar) {
 
         if (touristPackage.isPresent()){
             List<String> destinosSinEliminar = touristPackage.get().getDestinosName().stream().filter(s -> !s.equals(destinoABorrar)).toList();
@@ -654,7 +646,7 @@ public class AgenciaServidor {
     }
 
 
-    public void agregarLeaguajeGuia(ObservableList<String> observableListLenguajes, String lenguaje, TouristGuide touristGuide) throws RepeatedInformationException {
+    public void agregarLenguajeGuia(ObservableList<String> observableListLenguajes, String lenguaje, TouristGuide touristGuide) throws RepeatedInformationException {
 
         if (observableListLenguajes.stream().anyMatch(string -> string.equals(lenguaje))){
 
@@ -702,7 +694,7 @@ public class AgenciaServidor {
         serializarPaquetes();
     }
 
-    public String LogIn(String id, String password) throws WrongPasswordException, UserNoExistingException, AtributoVacioException {
+    public String logIn(String id, String password) throws WrongPasswordException, UserNoExistingException, AtributoVacioException {
 
         if (id == null || id.isBlank() || password == null || password.isBlank()){
             createAlertError("Campos obligatorios.", "Algunos campos son obligatorios (*)");

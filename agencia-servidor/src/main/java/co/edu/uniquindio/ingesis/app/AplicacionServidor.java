@@ -1,4 +1,4 @@
-package co.edu.uniquindio.ingesis;
+package co.edu.uniquindio.ingesis.app;
 
 import co.edu.uniquindio.ingesis.model.AgenciaServidor;
 import co.edu.uniquindio.ingesis.socket.HiloCliente;
@@ -15,7 +15,9 @@ public class AplicacionServidor {
 
         //Se crea el ServerSocket en el puerto 1234
         try(ServerSocket serverSocket = new ServerSocket(puerto)) {
+
             System.out.println("Esperando conexión...");
+
             while (true) {
 
                 //Se obtiene la conexión del cliente
