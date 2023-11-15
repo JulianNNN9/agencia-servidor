@@ -27,6 +27,7 @@ public class AplicacionServidor {
                 //Se crea un hilo para la conexión del cliente
                 HiloCliente hilo = new HiloCliente(clienteSocket, agenciaServidor);
                 new Thread(hilo).start();
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

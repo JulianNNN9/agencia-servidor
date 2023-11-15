@@ -42,81 +42,82 @@ public class HiloCliente implements Runnable{
 
             //Según el tipo de mensaje se invoca el método correspondiente
             switch (tipo) {
-                case "agregarCliente":
-                    agregarCliente((Client) contenido, out);
+                case "registrarCliente":
+                    registrarCliente((Client) contenido, out);
                     break;
+                    /*
                 case "hacerReservacion":
-                    hacerReservacion();
+                    hacerReservacion(out);
                     break;
                 case "calificarGuia":
-                    calificarGuia();
+                    calificarGuia(out);
                     break;
                 case "calificarDestino":
-                    calificarDestino();
+                    calificarDestino(out);
                     break;
                 case "modificarDestino":
-                    modificarDestino();
+                    modificarDestino(out);
                     break;
                 case "modificarPaquete":
-                    modificarPaquete();
+                    modificarPaquete(out);
                     break;
                 case "modificarGuia":
-                    modificarGuia();
+                    modificarGuia(out);
                     break;
                 case "modificarPerfil":
-                    modificarPerfil();
+                    modificarPerfil(out);
                     break;
                 case "eliminarDestinoName":
-                    eliminarDestinoName();
+                    eliminarDestinoName(out);
                     break;
                 case "eliminarRuta":
-                    eliminarRuta();
+                    eliminarRuta(out);
                     break;
                 case "eliminarLenguaje":
-                    eliminarLenguaje();
+                    eliminarLenguaje(out);
                     break;
                 case "eliminarDestino":
-                    eliminarDestino();
+                    eliminarDestino(out);
                     break;
                 case "eliminarPaquete":
-                    eliminarPaquete();
+                    eliminarPaquete(out);
                     break;
                 case "eliminarGuia":
-                    eliminarGuia();
+                    eliminarGuia(out);
                     break;
                 case "agregarGuia":
-                    agregarGuia();
+                    agregarGuia(out);
                     break;
                 case "agregarPaquete":
-                    agregarPaquete();
+                    agregarPaquete(out);
                     break;
                 case "agregarDestino":
-                    agregarDestino();
+                    agregarDestino(out);
                     break;
                 case "agregarImagenDestino":
-                    agregarImagenDestino();
+                    agregarImagenDestino(out);
                     break;
                 case "agregarLenguajeGuia":
-                    agregarLenguajeGuia();
+                    agregarLenguajeGuia(out);
                     break;
                 case "agregarDestinoEnPaquete":
-                    agregarDestinoEnPaquete();
+                    agregarDestinoEnPaquete(out);
                     break;
                 case "logIn":
-                    logInHilo();
+                    logInHilo(out);
                     break;
                 case "cancelarReserva":
-                    cancelarReserva();
+                    cancelarReserva((Reservation) contenido, out);
                     break;
                 case "confirmarReserva":
-                    confirmarReserva();
+                    confirmarReserva((Reservation) contenido, out);
                     break;
                 case "recompensasPorReservas":
-                    recompensasPorReservas();
+                    recompensasPorReservas((Client) contenido, out);
                     break;
                 case "alertaOfertasEspeciales":
                     alertaOfertasEspeciales();
-                    break;
+                    break; */
             }
 
             //Se cierra la conexión del socket para liberar los recursos asociados
@@ -128,7 +129,7 @@ public class HiloCliente implements Runnable{
         }
     }
 
-    public void agregarCliente(Client cliente, ObjectOutputStream out) throws IOException {
+    public void registrarCliente(Client cliente, ObjectOutputStream out) throws IOException {
         try {
             agencia.registrarCliente(cliente.getUserId(), cliente.getPassword(), cliente.getFullName(), cliente.getMail(), cliente.getPhoneNumber(), cliente.getResidence());
             out.writeObject("Cliente agregado correctamente.");
