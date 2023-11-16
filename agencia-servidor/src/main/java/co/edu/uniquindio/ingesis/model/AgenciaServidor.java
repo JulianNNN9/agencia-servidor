@@ -3,17 +3,6 @@ package co.edu.uniquindio.ingesis.model;
 import co.edu.uniquindio.ingesis.enums.ReservationStatus;
 import co.edu.uniquindio.ingesis.exceptions.*;
 import co.edu.uniquindio.ingesis.utils.*;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import java.io.File;
@@ -34,6 +23,13 @@ public class AgenciaServidor {
     List<Client> clients;
     List<Admin> admins;
 
+    private final String RUTA_TOURISTGUIDES = "src/main/resources/persistencia/touristGuides.ser";
+    private final String RUTA_ADMINS = "src/main/resources/persistencia/admins.ser";
+    private final String RUTA_DESTINOS = "src/main/resources/persistencia/destinos.ser";
+    private final String RUTA_RESERVATIONS = "src/main/resources/persistencia/reservations.ser";
+    private final String RUTA_CLIENTS = "src/main/resources/persistencia/clients.ser";
+    private final String RUTA_TOURISTPACKAGE = "src/main/resources/persistencia/touristPackages.ser";
+
     private static AgenciaServidor agenciaServidor;
 
     public AgenciaServidor() {
@@ -52,7 +48,7 @@ public class AgenciaServidor {
 
         new Thread(() -> {
 
-            ArrayList<TouristGuide> aux = (ArrayList<TouristGuide>) archiveUtils.deserializerObjet("src/main/resources/persistencia/touristGuides.ser");
+            ArrayList<TouristGuide> aux = (ArrayList<TouristGuide>) archiveUtils.deserializerObjet(RUTA_TOURISTGUIDES);
 
             this.touristGuides = Objects.requireNonNullElseGet(aux, ArrayList::new);
 
@@ -61,7 +57,7 @@ public class AgenciaServidor {
         //Cargar reservaciones
 
         new Thread(() -> {
-            ArrayList<Reservation> aux1 = (ArrayList<Reservation>) archiveUtils.deserializerObjet("src/main/resources/persistencia/reservations.ser");
+            ArrayList<Reservation> aux1 = (ArrayList<Reservation>) archiveUtils.deserializerObjet(RUTA_RESERVATIONS);
 
             this.reservations = Objects.requireNonNullElseGet(aux1, ArrayList::new);
 
@@ -71,7 +67,7 @@ public class AgenciaServidor {
 
         new Thread(() -> {
 
-            ArrayList<TouristPackage> aux2 = (ArrayList<TouristPackage>) archiveUtils.deserializerObjet("src/main/resources/persistencia/touristPackages.ser");
+            ArrayList<TouristPackage> aux2 = (ArrayList<TouristPackage>) archiveUtils.deserializerObjet(RUTA_TOURISTPACKAGE);
 
             this.touristPackages = Objects.requireNonNullElseGet(aux2, ArrayList::new);
 
@@ -81,7 +77,7 @@ public class AgenciaServidor {
 
         new Thread(() -> {
 
-            ArrayList<Destino> aux3 = (ArrayList<Destino>) archiveUtils.deserializerObjet("src/main/resources/persistencia/destinos.ser");
+            ArrayList<Destino> aux3 = (ArrayList<Destino>) archiveUtils.deserializerObjet(RUTA_DESTINOS);
 
             this.destinos = Objects.requireNonNullElseGet(aux3, ArrayList::new);
 
@@ -92,7 +88,7 @@ public class AgenciaServidor {
 
         new Thread(() -> {
 
-            ArrayList<Client> aux4 = (ArrayList<Client>) archiveUtils.deserializerObjet("src/main/resources/persistencia/clients.ser");
+            ArrayList<Client> aux4 = (ArrayList<Client>) archiveUtils.deserializerObjet(RUTA_CLIENTS);
 
             this.clients = Objects.requireNonNullElseGet(aux4, ArrayList::new);
 
@@ -103,7 +99,7 @@ public class AgenciaServidor {
 
         new Thread(() -> {
 
-            ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet("src/main/resources/persistencia/admins.ser");
+            ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
 
             this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
 
@@ -172,52 +168,24 @@ public class AgenciaServidor {
         /* TODO implementar un metodo que avise al cliente pos descuentos (Fin de año, navidad, semana santa)*/
     }
 
-    public void hacerReservacion(String clientID, String mailClient, Toggle selectedToggle, RadioButton radioBttonSI, RadioButton radioBttonNO, String selectedGuia, String nroCupos, String selectedPackageName) throws AtributoVacioException, CuposInvalidosException {
+    public void hacerReservacion(String clientID, String selectedGuia, String nroCupos, String selectedPackageName) throws AtributoVacioException, CuposInvalidosException {
 
         Optional<TouristPackage> aPackage = touristPackages.stream().filter(touristPackage -> touristPackage.getName().equals(selectedPackageName)).findFirst();
-
-        String detallesReserva = "";
-
-        if (aPackage.isPresent()) {
-             detallesReserva = "Detalles de la reserva: \n" +
-                    "Destino reservado: " + aPackage.get().getName() + "\n" +
-                    "Fecha de la reserva: " + LocalDate.now() + "\n" +
-                    "Precio del paquete: " + aPackage.get().getPrice() + "\n" +
-                    "Número de cupos: " + nroCupos + "\n" +
-                    "Duración: " + aPackage.get().getDuration();
-        }
-
-        if (selectedToggle == null){
-
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
-            log.info("Se ha intentado agregar un destino con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
-        }
 
         if (nroCupos == null || nroCupos.isEmpty() ||
                 selectedPackageName == null || selectedPackageName.isEmpty()) {
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
 
-        if (selectedToggle.equals(radioBttonSI)) {
-
-            if (selectedGuia == null || selectedGuia.isEmpty()) {
-
-                createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
-                log.info("Se ha intentado agregar un destino con campos vacios.");
-                throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
-            }
+        if (selectedGuia!= null) {
 
             Optional<TouristPackage> touristPackage = touristPackages.stream().filter(touristPackage1 -> touristPackage1.getName().equals(selectedPackageName)).findFirst();
 
             if (touristPackage.isPresent()) {
 
                 if (Integer.parseInt(nroCupos) > touristPackage.get().getQuota()) {
-
-                    createAlertError("Cupos inválidos", "La cantidad de cupos con los que desea reservar exceden los permitidos en el paquete");
                     log.info("Cupos inválidos.");
                     throw new CuposInvalidosException("Cupos inválidos.");
                 }
@@ -234,7 +202,6 @@ public class AgenciaServidor {
                         .numberOfPeople(Integer.valueOf(nroCupos))
                         .build();
 
-                createAlertInfo("Reservación éxitosa.", "Información", "Has hecho una reservación del paquete " + selectedPackageName + " para el " + touristPackage.get().getStartDate() + ".");
                 log.info("se ha hecho una reservación del paquete " + selectedPackageName + " para el " + touristPackage.get().getStartDate() + ".");
 
                 Optional<Client> client = clients.stream().filter(client1 -> client1.getUserId().equals(clientID)).findFirst();
@@ -252,13 +219,12 @@ public class AgenciaServidor {
             }
         }
 
-        if (selectedToggle.equals(radioBttonNO)) {
+        if (selectedGuia == null) {
 
             Optional<TouristPackage> touristPackage = touristPackages.stream().filter(touristPackage1 -> touristPackage1.getName().equals(selectedPackageName)).findFirst();
 
             if (Integer.parseInt(nroCupos) > touristPackage.get().getQuota()){
 
-                createAlertError("Cupos inválidos", "La cantidad de cupos con los que desea reservar exceden los permitidos en el paquete");
                 log.info("Cupos inválidos.");
                 throw new CuposInvalidosException("Cupos inválidos.");
             }
@@ -273,7 +239,6 @@ public class AgenciaServidor {
                     .numberOfPeople(Integer.valueOf(nroCupos))
                     .build();
 
-            createAlertInfo("Reservación éxitosa.","Información","Has hecho una reservación del paquete " + selectedPackageName + " para el " + touristPackage.get().getStartDate() + ".");
             log.info("se ha hecho una reservación del paquete " + selectedPackageName + " para el " + touristPackage.get().getStartDate() + ".");
 
             Optional<Client> client = clients.stream().filter(client1 -> client1.getUserId().equals(clientID)).findFirst();
@@ -295,28 +260,27 @@ public class AgenciaServidor {
         serializarReservaciones();
     }
 
-    public void calificarGuia(TouristGuide touristGuide, Toggle calificacionSelectedToggle, RadioButton radioBtton1Estrella, RadioButton radioBtton2Estrella, RadioButton radioBtton3Estrella, RadioButton radioBtton4Estrella, RadioButton radioBtton5Estrella) throws AtributoVacioException {
+    public void calificarGuia(TouristGuide touristGuide, String estrellas) throws AtributoVacioException {
 
-        if (calificacionSelectedToggle == null){
+        if (estrellas == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
 
-        if (calificacionSelectedToggle.equals(radioBtton1Estrella)){
+        if (estrellas.equals("1")){
             touristGuide.getRatingList().add(1);
         }
-        if (calificacionSelectedToggle.equals(radioBtton2Estrella)){
+        if (estrellas.equals("2")){
             touristGuide.getRatingList().add(2);
         }
-        if (calificacionSelectedToggle.equals(radioBtton3Estrella)){
+        if (estrellas.equals("3")){
             touristGuide.getRatingList().add(3);
         }
-        if (calificacionSelectedToggle.equals(radioBtton4Estrella)){
+        if (estrellas.equals("4")){
             touristGuide.getRatingList().add(4);
         }
-        if (calificacionSelectedToggle.equals(radioBtton5Estrella)){
+        if (estrellas.equals("5")){
             touristGuide.getRatingList().add(5);
         }
 
@@ -330,10 +294,9 @@ public class AgenciaServidor {
         serializarGuias();
     }
 
-    public void calificarDestino(Destino destino, String comentario, Toggle selectedToggle, RadioButton radioBtton1EstrellaDestino, RadioButton radioBtton2EstrellaDestino, RadioButton radioBtton3EstrellaDestino, RadioButton radioBtton4EstrellaDestino, RadioButton radioBtton5EstrellaDestino) throws AtributoVacioException {
+    public void calificarDestino(Destino destino, String comentario, String estrellas) throws AtributoVacioException {
 
-        if (selectedToggle == null){
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
+        if (estrellas == null){
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
@@ -342,19 +305,19 @@ public class AgenciaServidor {
             destino.getComentarios().add(comentario);
         }
 
-        if (selectedToggle.equals(radioBtton1EstrellaDestino)){
+        if (estrellas.equals("1")){
             destino.getRatingList().add(1);
         }
-        if (selectedToggle.equals(radioBtton2EstrellaDestino)){
+        if (estrellas.equals("2")){
             destino.getRatingList().add(2);
         }
-        if (selectedToggle.equals(radioBtton3EstrellaDestino)){
+        if (estrellas.equals("3")){
             destino.getRatingList().add(3);
         }
-        if (selectedToggle.equals(radioBtton4EstrellaDestino)){
+        if (estrellas.equals("4")){
             destino.getRatingList().add(4);
         }
-        if (selectedToggle.equals(radioBtton5EstrellaDestino)){
+        if (estrellas.equals("5")){
             destino.getRatingList().add(5);
         }
 
@@ -376,7 +339,6 @@ public class AgenciaServidor {
                 nuevaDescrpcion.isEmpty() ||
                 nuevaLocalDate.isEmpty()) {
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
@@ -397,7 +359,6 @@ public class AgenciaServidor {
                 nuevaFechaInicio == null ||
                 nuevaFechaFin == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
@@ -419,7 +380,6 @@ public class AgenciaServidor {
                 nuevaExperiencia == null || nuevaExperiencia.isEmpty() ||
                 nuevoRating == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un guia con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un guia con campos vacios.");
         }
@@ -439,7 +399,6 @@ public class AgenciaServidor {
                 nuevoNumero == null || nuevoNumero.isEmpty() ||
                 nuevoResidence == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un guia con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un guia con campos vacios.");
         }
@@ -499,44 +458,32 @@ public class AgenciaServidor {
     }
 
 
-    public void eliminarDestino(ObservableList<Destino> destinoObservableList, Destino selectedDestino) {
-        destinoObservableList.remove(selectedDestino);
+    public void eliminarDestino(Destino selectedDestino) {
         destinos.removeIf(destino -> destino.equals(selectedDestino));
         serializarDestinos();
     }
 
-    public void eliminarPaquete(ObservableList<TouristPackage> packageObservableList, TouristPackage selectedPackage) {
-        packageObservableList.remove(selectedPackage);
+    public void eliminarPaquete(TouristPackage selectedPackage) {
         touristPackages.removeIf(touristPackage -> touristPackage.equals(selectedPackage));
         serializarPaquetes();
     }
 
-    public void eliminarGuia(ObservableList<TouristGuide> touristGuideObservableList, TouristGuide selectedGuia) {
-        touristGuideObservableList.remove(selectedGuia);
+    public void eliminarGuia( TouristGuide selectedGuia) {
         touristGuides.removeIf(touristGuide -> touristGuide.equals(selectedGuia));
         serializarGuias();
     }
 
-    public void agregarGuia(ObservableList<TouristGuide> touristGuideObservableList, TouristGuide nuevoGuia) throws AtributoVacioException, RepeatedInformationException {
+    public void agregarGuia( TouristGuide nuevoGuia) throws AtributoVacioException, RepeatedInformationException {
 
         if (nuevoGuia.getId() == null || nuevoGuia.getId().isEmpty() ||
                 nuevoGuia.getFullName() == null || nuevoGuia.getFullName().isEmpty() ||
                 nuevoGuia.getExperience() == null || nuevoGuia.getExperience().isEmpty() ||
                 nuevoGuia.getRating() == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un guia con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un guia con campos vacios.");
         }
 
-        if (touristGuideObservableList.stream().anyMatch(touristGuide -> touristGuide.getId().equals(nuevoGuia.getId()))){
-
-            createAlertError("Guia existente", "El guia que trataba de agregar ya se encuentra registrado.");
-            log.severe("Se ha intentado registrar un guia existente.");
-            throw new RepeatedInformationException("Se ha intentado registrar un guia existente.");
-        }
-
-        touristGuideObservableList.add(nuevoGuia);
         agenciaServidor.touristGuides.add(nuevoGuia);
 
         serializarGuias();
@@ -545,11 +492,10 @@ public class AgenciaServidor {
 
     }
 
-    public void agregarPaquete(ObservableList<TouristPackage> packageObservableList, TouristPackage nuevoPaquete) throws AtributoVacioException, RepeatedInformationException, ErrorEnIngresoFechasException {
+    public void agregarPaquete( TouristPackage nuevoPaquete) throws AtributoVacioException, ErrorEnIngresoFechasException {
 
         if (LocalDate.now().isAfter(nuevoPaquete.getStartDate())){
 
-            createAlertError("Error en el ingreso de fechas", "Las fechas que desea ingresar son inválidas, verifiquelas.");
             log.info("Las fechas fueron incorrectamente colocadas.");
             throw new ErrorEnIngresoFechasException("Las fechas fueron incorrectamente colocadas.");
         }
@@ -560,25 +506,15 @@ public class AgenciaServidor {
                 nuevoPaquete.getStartDate() == null ||
                 nuevoPaquete.getEndDate() == null){
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
 
-        if (packageObservableList.stream().anyMatch(touristPackage -> touristPackage.getName().equals(nuevoPaquete.getName()))){
-
-            createAlertError("Paquete existente", "El paquete que trataba de agregar ya se encuentra registrado.");
-            log.severe("Se ha intentado crear un paquete existente.");
-            throw new RepeatedInformationException("Se ha intentado crear un paquete existente.");
-        }
-
         if (nuevoPaquete.getDuration() < 0){
-            createAlertError("Error en el ingreso de fechas", "Las fechas que desea ingresar son inválidas, verifiquelas.");
             log.info("Las fechas fueron incorrectamente colocadas, la fecha de inicio no puede ser después de la fecha de fin.");
             throw new ErrorEnIngresoFechasException("Las fechas fueron incorrectamente colocadas, la fecha de inicio no puede ser después de la fecha de fin.");
         }
 
-        packageObservableList.add(nuevoPaquete);
         agenciaServidor.touristPackages.add(nuevoPaquete);
 
         serializarPaquetes();
@@ -587,26 +523,23 @@ public class AgenciaServidor {
 
     }
 
-    public void agregarDestino(ObservableList<Destino> destinoObservableList, Destino nuevoDestino) throws RepeatedInformationException, AtributoVacioException {
+    public void agregarDestino(Destino nuevoDestino) throws RepeatedInformationException, AtributoVacioException {
 
         if (nuevoDestino.getName().isEmpty() ||
                 nuevoDestino.getCity().isEmpty() ||
                 nuevoDestino.getDescription().isEmpty() ||
                 nuevoDestino.getWeather().isEmpty()) {
 
-            createAlertError("Campos obligatorios", "Los campos marcados con (*) son oblogatorios");
             log.info("Se ha intentado agregar un destino con campos vacios.");
             throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
         }
 
-        if (destinoObservableList.stream().anyMatch(destination -> destination.getName().equals(nuevoDestino.getName()))){
+        if (destinos.stream().anyMatch(destination -> destination.getName().equals(nuevoDestino.getName()))){
 
-            createAlertError("Destino existente", "El destino que trataba de agregar ya se encuentra registrado.");
             log.severe("Se ha intentado crear un Destino existente.");
             throw new RepeatedInformationException("Se ha intentado crear un Destino existente.");
         }
 
-        destinoObservableList.add(nuevoDestino);
         agenciaServidor.destinos.add(nuevoDestino);
 
         serializarDestinos();
@@ -615,25 +548,15 @@ public class AgenciaServidor {
 
         }
 
-    public void agregarImagenDestino(ObservableList<String> observableListRutas, String ruta, Destino destino) throws RutaInvalidaException, RepeatedInformationException {
+    public void agregarImagenDestino(String ruta, Destino destino) throws RutaInvalidaException {
 
         File archivo = new File(ruta);
         boolean esRutaDeArchivo = archivo.exists() && archivo.isFile();
 
         if (!esRutaDeArchivo){
-            createAlertError("Error en la ruta", "La ruta que trata de ingresar es inválida o inexistente.");
             log.severe("Se ha intentado agregar una imagen invalida a un destino.");
             throw new RutaInvalidaException("Se ha intentado agregar una imagen invalida a un destino.");
         }
-
-        if (observableListRutas.stream().anyMatch(string -> string.equals(ruta))){
-
-            createAlertError("Ruta existente", "La ruta que trataba de agregar ya se encuentra registrada.");
-            log.severe("Se ha intentado crear una ruta existente.");
-            throw new RepeatedInformationException("Se ha intentado crear una ruta existente.");
-        }
-
-        observableListRutas.add(ruta);
 
         for (Destino d : destinos) {
             if (d.equals(destino)) {
@@ -646,16 +569,7 @@ public class AgenciaServidor {
     }
 
 
-    public void agregarLenguajeGuia(ObservableList<String> observableListLenguajes, String lenguaje, TouristGuide touristGuide) throws RepeatedInformationException {
-
-        if (observableListLenguajes.stream().anyMatch(string -> string.equals(lenguaje))){
-
-            createAlertError("Lenguaje ya ingresado", "La lenguaje que trataba de agregar ya se encuentra agregado.");
-            log.severe("Se ha intentado agregar un lenaguje existente.");
-            throw new RepeatedInformationException("Se ha intentado agregar un lenaguje existente.");
-        }
-
-        observableListLenguajes.add(lenguaje);
+    public void agregarLenguajeGuia( String lenguaje, TouristGuide touristGuide) throws RepeatedInformationException {
 
         for (TouristGuide t : touristGuides) {
             if (t.equals(touristGuide)) {
@@ -667,16 +581,7 @@ public class AgenciaServidor {
         serializarGuias();
     }
 
-    public void agregarDestinoEnPaquete(ObservableList<String> observableListDestinationName, String selectedItem, TouristPackage touristPackage) throws RepeatedInformationException {
-
-        if (observableListDestinationName.stream().anyMatch(string -> string.equals(selectedItem))){
-
-            createAlertError("Destino existente", "La destino que trataba de agregar ya se encuentra registrada.");
-            log.severe("Se ha intentado agregar un destino existente.");
-            throw new RepeatedInformationException("Se ha intentado agregar un destino existente.");
-        }
-
-        observableListDestinationName.add(selectedItem);
+    public void agregarDestinoEnPaquete( String selectedItem, TouristPackage touristPackage) {
 
         for (TouristPackage t : touristPackages) {
             if (t.equals(touristPackage)) {
@@ -697,7 +602,6 @@ public class AgenciaServidor {
     public String logIn(String id, String password) throws WrongPasswordException, UserNoExistingException, AtributoVacioException {
 
         if (id == null || id.isBlank() || password == null || password.isBlank()){
-            createAlertError("Campos obligatorios.", "Algunos campos son obligatorios (*)");
             log.info("se ha intentado registrar un cliente con campos obligatorios vacios");
             throw new AtributoVacioException("Se ha hecho un intento de registro de cliente con campos vacios");
         }
@@ -721,13 +625,11 @@ public class AgenciaServidor {
                 phoneNumber == null || phoneNumber.isBlank() ||
                 residence == null || residence.isBlank()){
 
-            createAlertError("Campos obligatorios.", "Todos los campos son obligatorios (*)");
             log.info("se ha intentado registrar un cliente con campos obligatorios vacios");
             throw new AtributoVacioException("Se ha hecho un intento de registro de cliente con campos vacios");
         }
 
         if(clients.stream().anyMatch(cliente -> cliente.getUserId().equals(userId))){
-            createAlertError("Usuario existente", "El usuario ya existe.");
             log.info("se intento registrar un usuario que ya existe");
             throw new RepeatedInformationException("el usuario ya exite");
         }
@@ -742,7 +644,6 @@ public class AgenciaServidor {
                 .build();
 
         clients.add(client);
-        createAlertInfo("Cuenta creada", "Información", "Se ha creado su cuenta correctamente.");
 
         serizalizarClientes();
 
@@ -755,7 +656,6 @@ public class AgenciaServidor {
 
         if (i >= admins.size()) {
 
-            createAlertError("El usuario ingresado no existe", "Verifique los datos");
             log.info("Se ha hecho un intento de registro con informacion incorrecta.");
             throw new UserNoExistingException("Usuario no existente");
 
@@ -771,7 +671,6 @@ public class AgenciaServidor {
 
             } else {
 
-                createAlertError("Contraseña incorrecta", "Verifique los datos");
                 log.info("Se ha intentado un inicio de sesión con contraseña incorrecta.");
                 throw new WrongPasswordException("Contraseña incorrecta");
 
@@ -788,7 +687,6 @@ public class AgenciaServidor {
 
         if (i >= clients.size()) {
 
-            createAlertError("El usuario ingresado no existe", "Verifique los datos");
             log.info("Se ha hecho un intento de registro con informacion incorrecta.");
             throw new UserNoExistingException("Usuario no existente");
 
@@ -803,7 +701,6 @@ public class AgenciaServidor {
 
             } else {
 
-                createAlertError("Contraseña incorrecta", "Verifique los datos");
                 log.info("Se ha intentado un inicio de sesión con contraseña incorrecta.");
                 throw new WrongPasswordException("Contraseña incorrecta");
             }
@@ -813,38 +710,6 @@ public class AgenciaServidor {
         }
     }
 
-    public void generateWindow(String path, ImageView close) throws IOException {
-
-        File url = new File(path);
-        FXMLLoader loader = new FXMLLoader(url.toURL());
-        Parent parent = loader.load();
-
-        Scene scene = new Scene(parent);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setResizable(false);
-        stage.show();
-
-        Stage stage1 = (Stage) close.getScene().getWindow();
-        stage1.close();
-    }
-
-    public void createAlertError(String titleError, String contentError){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titleError);
-        alert.setContentText(contentError);
-        alert.show();
-    }
-
-    public void createAlertInfo(String titleError, String headerError, String contentError){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titleError);
-        alert.setHeaderText(headerError);
-        alert.setContentText(contentError);
-        alert.show();
-    }
 
     public void cancelarReserva(Reservation reserva) {
         reserva.setReservationStatus(ReservationStatus.CANCELED);
