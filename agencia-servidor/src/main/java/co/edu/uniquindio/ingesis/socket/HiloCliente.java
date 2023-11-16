@@ -1,16 +1,12 @@
 package co.edu.uniquindio.ingesis.socket;
 
+import co.edu.uniquindio.ingesis.datos.*;
 import co.edu.uniquindio.ingesis.model.*;
-import javafx.collections.ObservableList;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
 import lombok.extern.java.Log;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.time.LocalDate;
-import java.util.Optional;
 
 @Log
 public class HiloCliente implements Runnable{
@@ -45,73 +41,75 @@ public class HiloCliente implements Runnable{
                 case "registrarCliente":
                     registrarCliente((Client) contenido, out);
                     break;
-                    /*
                 case "hacerReservacion":
-                    hacerReservacion(out);
+                    hacerReservacion( (ReservaDatos) contenido, out );
+                    break;
+                case "listarReservas":
+                    getReservations( out );
                     break;
                 case "calificarGuia":
-                    calificarGuia(out);
+                    calificarGuia((CalificarGuiaDatos) contenido, out);
                     break;
                 case "calificarDestino":
-                    calificarDestino(out);
+                    calificarDestino((CalificarDestinoDatos) contenido, out);
                     break;
                 case "modificarDestino":
-                    modificarDestino(out);
+                    modificarDestino((ModificarDestinoDatos) contenido, out);
                     break;
                 case "modificarPaquete":
-                    modificarPaquete(out);
+                    modificarPaquete((ModificarPaquetesDatos) contenido, out);
                     break;
                 case "modificarGuia":
-                    modificarGuia(out);
+                    modificarGuia((ModificarGuiaDatos) contenido, out);
                     break;
                 case "modificarPerfil":
-                    modificarPerfil(out);
+                    modificarPerfil((ModificarPerfilDatos) contenido, out);
                     break;
                 case "eliminarDestinoName":
-                    eliminarDestinoName(out);
+                    eliminarDestinoName((EliminarDestinoName) contenido, out);
                     break;
                 case "eliminarRuta":
-                    eliminarRuta(out);
+                    eliminarRuta((EliminarRutaDatos) contenido, out);
                     break;
                 case "eliminarLenguaje":
-                    eliminarLenguaje(out);
+                    eliminarLenguaje((EliminarLenguajeDatos) contenido, out);
                     break;
                 case "eliminarDestino":
-                    eliminarDestino(out);
+                    eliminarDestino((Destino) contenido, out);
                     break;
                 case "eliminarPaquete":
-                    eliminarPaquete(out);
+                    eliminarPaquete((TouristPackage) contenido, out);
                     break;
                 case "eliminarGuia":
-                    eliminarGuia(out);
+                    eliminarGuia((TouristGuide) contenido, out);
                     break;
                 case "agregarGuia":
-                    agregarGuia(out);
+                    agregarGuia((TouristGuide) contenido, out);
                     break;
                 case "agregarPaquete":
-                    agregarPaquete(out);
+                    agregarPaquete((TouristPackage) contenido, out);
                     break;
                 case "agregarDestino":
-                    agregarDestino(out);
+                    agregarDestino((Destino) contenido, out);
                     break;
                 case "agregarImagenDestino":
-                    agregarImagenDestino(out);
+                    agregarImagenDestino((AgregarImagenDestinoDatos) contenido, out);
                     break;
                 case "agregarLenguajeGuia":
-                    agregarLenguajeGuia(out);
+                    agregarLenguajeGuia((AgregarLenguajeGuiaDatos) contenido, out);
                     break;
                 case "agregarDestinoEnPaquete":
-                    agregarDestinoEnPaquete(out);
+                    agregarDestinoEnPaquete((AgregarDestinoEnPaqueteDatos) contenido, out);
                     break;
                 case "logIn":
-                    logInHilo(out);
+                    logInHilo((LogInDatos) contenido, out);
                     break;
                 case "cancelarReserva":
                     cancelarReserva((Reservation) contenido, out);
                     break;
                 case "confirmarReserva":
                     confirmarReserva((Reservation) contenido, out);
-                    break;
+                    break;/*
                 case "recompensasPorReservas":
                     recompensasPorReservas((Client) contenido, out);
                     break;
@@ -123,10 +121,14 @@ public class HiloCliente implements Runnable{
             //Se cierra la conexión del socket para liberar los recursos asociados
             socket.close();
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             log.severe(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    private void getReservations(ObjectOutputStream out) throws Exception {
+        out.writeObject( agencia.getReservations() );
     }
 
     public void registrarCliente(Client cliente, ObjectOutputStream out) throws IOException {
@@ -138,181 +140,180 @@ public class HiloCliente implements Runnable{
         }
     }
 
-    public void hacerReservacion(String clientID, String mailClient, Toggle selectedToggle, RadioButton radioBttonSI, RadioButton radioBttonNO, String selectedGuia, String nroCupos, String selectedPackageName, ObjectOutputStream out) throws IOException {
+    public void hacerReservacion(ReservaDatos reservaDatos, ObjectOutputStream out) throws IOException {
         try{
-            agencia.hacerReservacion(clientID, mailClient, selectedToggle, radioBttonSI, radioBttonNO, selectedGuia, nroCupos, selectedPackageName);
+            agencia.hacerReservacion(reservaDatos.getClientID(), reservaDatos.getSelectedGuia(), reservaDatos.getNroCupos(), reservaDatos.getSelectedPackageName());
             out.writeObject("Se ha hecho la reservación.");
         } catch (Exception e) {
             out.writeObject(e.getMessage());
         }
     }
 
-    public void calificarGuia(TouristGuide touristGuide, Toggle calificacionSelectedToggle, RadioButton radioBtton1Estrella, RadioButton radioBtton2Estrella, RadioButton radioBtton3Estrella, RadioButton radioBtton4Estrella, RadioButton radioBtton5Estrella, ObjectOutputStream out) throws IOException {
+    public void calificarGuia(CalificarGuiaDatos calificarGuiaDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.calificarGuia(touristGuide,calificacionSelectedToggle, radioBtton1Estrella, radioBtton2Estrella, radioBtton3Estrella, radioBtton4Estrella, radioBtton5Estrella);
+            agencia.calificarGuia(calificarGuiaDatos.getTouristGuide(), calificarGuiaDatos.getEstrellas());
             out.writeObject("Se ha calificado un guía.");
         } catch (Exception e) {
             out.writeObject(e.getMessage());
         }
     }
 
-    public void calificarDestino(Destino destino, String comentario, Toggle selectedToggle, RadioButton radioBtton1EstrellaDestino, RadioButton radioBtton2EstrellaDestino, RadioButton radioBtton3EstrellaDestino, RadioButton radioBtton4EstrellaDestino, RadioButton radioBtton5EstrellaDestino, ObjectOutputStream out) throws IOException {
+    public void calificarDestino(CalificarDestinoDatos calificarDestinoDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.calificarDestino(destino, comentario, selectedToggle, radioBtton1EstrellaDestino, radioBtton2EstrellaDestino, radioBtton3EstrellaDestino, radioBtton4EstrellaDestino, radioBtton5EstrellaDestino);
+            agencia.calificarDestino(calificarDestinoDatos.getDestino(), calificarDestinoDatos.getComentario(), calificarDestinoDatos.getEstrellas());
             out.writeObject("Se ha calificado un destino.");
         } catch (Exception e) {
             out.writeObject(e.getMessage());
         }
     }
 
-    public void modificarDestino(Destino selectedDestino, String nuevoNombre, String nuevaCiudad, String nuevaDescrpcion, String nuevaLocalDate, ObjectOutputStream out) throws IOException {
+    public void modificarDestino(ModificarDestinoDatos modificarDestinoDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.modificarDestino(selectedDestino, nuevoNombre, nuevaCiudad, nuevaDescrpcion, nuevaLocalDate);
+            agencia.modificarDestino(modificarDestinoDatos.getSelectedDestino(), modificarDestinoDatos.getNuevoName(), modificarDestinoDatos.getNuevaCiudad(), modificarDestinoDatos.getNuevaDescripcion(), modificarDestinoDatos.getNuevoClima());
             out.writeObject("Se ha modificado un destino.");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void modificarPaquete(TouristPackage selectedPackage, String nuevoNombrePaquete, double nuevoPrecio, int nuevosCupos, LocalDate nuevaFechaInicio, LocalDate nuevaFechaFin, ObjectOutputStream out) throws IOException {
+    public void modificarPaquete(ModificarPaquetesDatos modificarPaquetesDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.modificarPaquete(selectedPackage, nuevoNombrePaquete, nuevoPrecio, nuevosCupos, nuevaFechaInicio, nuevaFechaFin);
+            agencia.modificarPaquete(modificarPaquetesDatos.getSelectedPackage(), modificarPaquetesDatos.getNombrePaquete(), modificarPaquetesDatos.getPrecio(), modificarPaquetesDatos.getCupo(), modificarPaquetesDatos.getFechaInicio(), modificarPaquetesDatos.getFechaFin());
             out.writeObject("Se ha modificado un paquete");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating, ObjectOutputStream out) throws IOException {
+    public void modificarGuia(ModificarGuiaDatos modificarGuiaDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.modificarGuia(selectedGuia, nuevoGuideID, nuevoGuideName, nuevaExperiencia, nuevoRating);
+            agencia.modificarGuia(modificarGuiaDatos.getSelectedGuia(), modificarGuiaDatos.getGuideID(), modificarGuiaDatos.getFullNameGuide(), modificarGuiaDatos.getExperience(), modificarGuiaDatos.getRating());
             out.writeObject("Se ha modificado un guia");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void modificarPerfil(String clientID, String nuevoName, String nuevoMail, String nuevoNumero, String nuevoResidence, ObjectOutputStream out) throws IOException {
+    public void modificarPerfil(ModificarPerfilDatos modificarPerfilDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.modificarPerfil(clientID, nuevoName, nuevoMail, nuevoNumero, nuevoResidence);
+            agencia.modificarPerfil(modificarPerfilDatos.getClientID(), modificarPerfilDatos.getNuevoNombre(), modificarPerfilDatos.getNuevoMail(), modificarPerfilDatos.getNuevoNumero(), modificarPerfilDatos.getNuevaResidencia());
             out.writeObject("Se ha modificado su perfil");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarDestinoName(Optional<TouristPackage> touristPackage, String destinoABorrar, ObjectOutputStream out) throws IOException {
+    public void eliminarDestinoName(EliminarDestinoName eliminarDestinoName, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarDestinoName(touristPackage, destinoABorrar);
+            agencia.eliminarDestinoName(eliminarDestinoName.getPackageSeleccionadoOpcional(), eliminarDestinoName.getSelectedDestino());
             out.writeObject("Se ha eliminado un destino de un paquete");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarRuta(Optional<Destino> destino, String rutaABorrar, ObjectOutputStream out) throws IOException {
+    public void eliminarRuta(EliminarRutaDatos eliminarRutaDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarRuta(destino, rutaABorrar);
+            agencia.eliminarRuta(eliminarRutaDatos.getDestinoSeleccionadoOpcional(), eliminarRutaDatos.getSelectedRuta());
             out.writeObject("Se ha eliminado una imagen de un destino");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarLenguaje(Optional<TouristGuide> touristGuide, String lenguajeABorrar, ObjectOutputStream out) throws IOException {
+    public void eliminarLenguaje(EliminarLenguajeDatos eliminarLenguajeDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarLenguaje(touristGuide, lenguajeABorrar);
+            agencia.eliminarLenguaje(eliminarLenguajeDatos.getGuideSeleccionadoOpcional(), eliminarLenguajeDatos.getSelectedLenguaje());
             out.writeObject("Se ha eliminado un idioma de un guía");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarDestino(ObservableList<Destino> destinoObservableList, Destino selectedDestino, ObjectOutputStream out) throws IOException {
+    public void eliminarDestino(Destino selectedDestino, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarDestino(destinoObservableList, selectedDestino);
+            agencia.eliminarDestino(selectedDestino);
             out.writeObject("Se ha eliminado un destino");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarPaquete(ObservableList<TouristPackage> packageObservableList, TouristPackage selectedPackage, ObjectOutputStream out) throws IOException {
+    public void eliminarPaquete( TouristPackage selectedPackage, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarPaquete(packageObservableList, selectedPackage);
+            agencia.eliminarPaquete( selectedPackage);
             out.writeObject("Se ha eliminado un paquete");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void eliminarGuia(ObservableList<TouristGuide> touristGuideObservableList, TouristGuide selectedGuia, ObjectOutputStream out) throws IOException {
+    public void eliminarGuia( TouristGuide selectedGuia, ObjectOutputStream out) throws IOException {
         try {
-            agencia.eliminarGuia(touristGuideObservableList, selectedGuia);
+            agencia.eliminarGuia( selectedGuia);
             out.writeObject("Se ha eliminado un guia");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarGuia(ObservableList<TouristGuide> touristGuideObservableList, TouristGuide nuevoGuia, ObjectOutputStream out) throws IOException {
+    public void agregarGuia(TouristGuide nuevoGuia, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarGuia(touristGuideObservableList, nuevoGuia);
+            agencia.agregarGuia(nuevoGuia);
             out.writeObject("Se ha creado un guia");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarPaquete(ObservableList<TouristPackage> packageObservableList, TouristPackage nuevoPaquete, ObjectOutputStream out) throws IOException {
+    public void agregarPaquete(TouristPackage nuevoPaquete, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarPaquete(packageObservableList, nuevoPaquete);
+            agencia.agregarPaquete( nuevoPaquete);
             out.writeObject("Se ha creado un paquete");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarDestino(ObservableList<Destino> destinoObservableList, Destino nuevoDestino, ObjectOutputStream out) throws IOException {
+    public void agregarDestino(Destino nuevoDestino, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarDestino(destinoObservableList, nuevoDestino);
+            agencia.agregarDestino(nuevoDestino);
             out.writeObject("Se ha creado un destino");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarImagenDestino(ObservableList<String> observableListRutas, String ruta, Destino destino, ObjectOutputStream out) throws IOException {
+    public void agregarImagenDestino(AgregarImagenDestinoDatos agregarImagenDestinoDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarImagenDestino(observableListRutas, ruta, destino);
+            agencia.agregarImagenDestino(agregarImagenDestinoDatos.getRuta(), agregarImagenDestinoDatos.getDestino());
             out.writeObject("Se ha agregado una imagen");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarLenguajeGuia(ObservableList<String> observableListLenguajes, String lenguaje, TouristGuide touristGuide, ObjectOutputStream out) throws IOException {
+    public void agregarLenguajeGuia(AgregarLenguajeGuiaDatos agregarLenguajeGuiaDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarLenguajeGuia(observableListLenguajes, lenguaje, touristGuide);
+            agencia.agregarLenguajeGuia(agregarLenguajeGuiaDatos.getLenguaje(), agregarLenguajeGuiaDatos.getTouristGuide());
             out.writeObject("Se ha agregado un lenguaje al guia");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void agregarDestinoEnPaquete(ObservableList<String> observableListDestinationName, String selectedItem, TouristPackage touristPackage, ObjectOutputStream out) throws IOException {
+    public void agregarDestinoEnPaquete(AgregarDestinoEnPaqueteDatos agregarDestinoEnPaqueteDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.agregarDestinoEnPaquete(observableListDestinationName, selectedItem, touristPackage);
+            agencia.agregarDestinoEnPaquete(agregarDestinoEnPaqueteDatos.getSelectedDestino(), agregarDestinoEnPaqueteDatos.getTouristPackage());
             out.writeObject("Se ha agregado un destino al paquete");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
     }
 
-    public void logInHilo(String id, String password, ObjectOutputStream out) throws IOException {
+    public void logInHilo(LogInDatos logInDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.logIn(id, password);
-            out.writeObject("Se ha iniciado sesion");
+            out.writeObject(agencia.logIn(logInDatos.getId(), logInDatos.getPassword()));
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
@@ -329,7 +330,7 @@ public class HiloCliente implements Runnable{
 
     public void confirmarReserva(Reservation reserva, ObjectOutputStream out) throws IOException {
         try {
-            agencia.cancelarReserva(reserva);
+            agencia.confirmarReserva(reserva);
             out.writeObject("Se ha confirmado una reserva");
         } catch (Exception e){
             out.writeObject(e.getMessage());
