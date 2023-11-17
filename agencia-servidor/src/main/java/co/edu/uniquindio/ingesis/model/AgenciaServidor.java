@@ -46,64 +46,39 @@ public class AgenciaServidor {
 
         //Cargar guía
 
-        new Thread(() -> {
+        ArrayList<TouristGuide> aux = (ArrayList<TouristGuide>) archiveUtils.deserializerObjet(RUTA_TOURISTGUIDES);
 
-            ArrayList<TouristGuide> aux = (ArrayList<TouristGuide>) archiveUtils.deserializerObjet(RUTA_TOURISTGUIDES);
-
-            this.touristGuides = Objects.requireNonNullElseGet(aux, ArrayList::new);
-
-        }).start();
+        this.touristGuides = Objects.requireNonNullElseGet(aux, ArrayList::new);
 
         //Cargar reservaciones
 
-        new Thread(() -> {
-            ArrayList<Reservation> aux1 = (ArrayList<Reservation>) archiveUtils.deserializerObjet(RUTA_RESERVATIONS);
+        ArrayList<Reservation> aux1 = (ArrayList<Reservation>) archiveUtils.deserializerObjet(RUTA_RESERVATIONS);
 
-            this.reservations = Objects.requireNonNullElseGet(aux1, ArrayList::new);
-
-        }).start();
+        this.reservations = Objects.requireNonNullElseGet(aux1, ArrayList::new);
 
         //Cargar paquetes
 
-        new Thread(() -> {
+        ArrayList<TouristPackage> aux2 = (ArrayList<TouristPackage>) archiveUtils.deserializerObjet(RUTA_TOURISTPACKAGE);
 
-            ArrayList<TouristPackage> aux2 = (ArrayList<TouristPackage>) archiveUtils.deserializerObjet(RUTA_TOURISTPACKAGE);
-
-            this.touristPackages = Objects.requireNonNullElseGet(aux2, ArrayList::new);
-
-        }).start();
+        this.touristPackages = Objects.requireNonNullElseGet(aux2, ArrayList::new);
 
         //Cargar destinos
-
-        new Thread(() -> {
 
             ArrayList<Destino> aux3 = (ArrayList<Destino>) archiveUtils.deserializerObjet(RUTA_DESTINOS);
 
             this.destinos = Objects.requireNonNullElseGet(aux3, ArrayList::new);
 
-        }).start();
-
-
         //Cargar clientes
-
-        new Thread(() -> {
 
             ArrayList<Client> aux4 = (ArrayList<Client>) archiveUtils.deserializerObjet(RUTA_CLIENTS);
 
             this.clients = Objects.requireNonNullElseGet(aux4, ArrayList::new);
 
-        }).start();
-
-
         //Cargar admins
-
-        new Thread(() -> {
 
             ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
 
             this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
-
-        }).start();
 
     }
 

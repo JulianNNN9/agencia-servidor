@@ -12,11 +12,10 @@ import java.net.Socket;
 public class HiloCliente implements Runnable{
     private final Socket socket;
     private final AgenciaServidor agencia;
-    public HiloCliente(Socket socket, AgenciaServidor agencia){
 
+    public HiloCliente(Socket socket, AgenciaServidor agencia){
         this.socket = socket;
         this.agencia = agencia;
-
     }
     @Override
     public void run() {
@@ -44,8 +43,20 @@ public class HiloCliente implements Runnable{
                 case "hacerReservacion":
                     hacerReservacion( (ReservaDatos) contenido, out );
                     break;
-                case "listarReservas":
-                    getReservations( out );
+                case "getReservations":
+                    getReservations(out);
+                    break;
+                case "getTouristGuide":
+                    getTouristGuides(out);
+                    break;
+                case "getDestinos":
+                    getDestinos(out);
+                    break;
+                case "getTouristPackage":
+                    getTouristPackages(out);
+                    break;
+                case "getClientes":
+                    getClientes(out);
                     break;
                 case "calificarGuia":
                     calificarGuia((CalificarGuiaDatos) contenido, out);
@@ -121,14 +132,30 @@ public class HiloCliente implements Runnable{
             //Se cierra la conexión del socket para liberar los recursos asociados
             socket.close();
 
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             log.severe(e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    private void getReservations(ObjectOutputStream out) throws Exception {
+    private void getClientes(ObjectOutputStream out) throws IOException {
+        out.writeObject( agencia.getClients() );
+    }
+
+    private void getReservations(ObjectOutputStream out) throws IOException {
         out.writeObject( agencia.getReservations() );
+    }
+
+    private void getTouristGuides(ObjectOutputStream out) throws IOException {
+        out.writeObject( agencia.getTouristGuides() );
+    }
+
+    private void getDestinos(ObjectOutputStream out) throws IOException {
+        out.writeObject( agencia.getDestinos() );
+    }
+
+    private void getTouristPackages(ObjectOutputStream out) throws IOException {
+        out.writeObject( agencia.getTouristPackages() );
     }
 
     public void registrarCliente(Client cliente, ObjectOutputStream out) throws IOException {
