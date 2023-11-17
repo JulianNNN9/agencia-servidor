@@ -23,12 +23,12 @@ public class AgenciaServidor {
     List<Client> clients;
     List<Admin> admins;
 
-    private final String RUTA_TOURISTGUIDES = "src/main/resources/persistencia/touristGuides.ser";
-    private final String RUTA_ADMINS = "src/main/resources/persistencia/admins.ser";
-    private final String RUTA_DESTINOS = "src/main/resources/persistencia/destinos.ser";
-    private final String RUTA_RESERVATIONS = "src/main/resources/persistencia/reservations.ser";
-    private final String RUTA_CLIENTS = "src/main/resources/persistencia/clients.ser";
-    private final String RUTA_TOURISTPACKAGE = "src/main/resources/persistencia/touristPackages.ser";
+    private final String RUTA_TOURISTGUIDES = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\touristGuides.ser";
+    private final String RUTA_ADMINS = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\admins.ser";
+    private final String RUTA_DESTINOS = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\destinos.ser";
+    private final String RUTA_RESERVATIONS = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\reservations.ser";
+    private final String RUTA_CLIENTS = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\clients.ser";
+    private final String RUTA_TOURISTPACKAGE = "G:\\IntelliJ IDEA - workspace\\agencia-servidor\\agencia-servidor\\src\\main\\resources\\persistencia\\touristPackages.ser";
 
     private static AgenciaServidor agenciaServidor;
 
