@@ -162,3 +162,25 @@ nov. 18, 2023 9:18:22 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor val
 INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
 nov. 18, 2023 9:20:04 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
 INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 11:02:02 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor registrarCliente
+INFORMACIÓN: se ha registrado un cliente con el user ID 1094882679
+nov. 18, 2023 11:02:11 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
+nov. 18, 2023 11:02:23 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AA para el 2023-11-19.
+nov. 18, 2023 11:02:51 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: Se ha intentado agregar un destino con campos vacios.
+nov. 18, 2023 11:06:50 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
+nov. 18, 2023 11:06:55 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AA para el 2023-11-19.
+nov. 18, 2023 11:11:26 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
+nov. 18, 2023 11:12:13 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
+nov. 18, 2023 11:12:22 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AAAA para el 2023-11-19.
+nov. 18, 2023 11:19:52 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
+nov. 18, 2023 11:20:12 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AAAA para el 2023-11-19.

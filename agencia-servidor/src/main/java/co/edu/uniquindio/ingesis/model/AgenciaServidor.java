@@ -5,12 +5,22 @@ import co.edu.uniquindio.ingesis.exceptions.*;
 import co.edu.uniquindio.ingesis.utils.*;
 import lombok.Getter;
 import lombok.extern.java.Log;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Log @Getter
 
@@ -76,9 +86,11 @@ public class AgenciaServidor {
 
         //Cargar admins
 
-        ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
+        //ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
 
-        this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
+        //this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
+
+        this.admins = new ArrayList<>();
 
         this.admins.add(Admin.builder()
                         .userId("admin")
@@ -210,6 +222,23 @@ public class AgenciaServidor {
                 Optional<Client> client = clients.stream().filter(client1 -> client1.getUserId().equals(clientID)).findFirst();
 
                 if (client.isPresent()) {
+
+                    String mensajeCorreo = "¡Gracias por hacer la reserva!\n\n" +
+                            "Detalles de la reserva:\n" +
+                            "Paquete Turístico: " + nuevaReservacion.getTouristPackage().getName() + "\n" +
+                            "Fecha de Solicitud: " + nuevaReservacion.getRequestDate() + "\n" +
+                            "Estado de la Reserva: " + nuevaReservacion.getReservationStatus() + "\n" +
+                            "Fecha de Inicio: " + nuevaReservacion.getStartDate() + "\n" +
+                            "Fecha de Fin: " + nuevaReservacion.getEndDate() + "\n" +
+                            "Guía Turístico: " + (nuevaReservacion.getTouristGuide() != null ? nuevaReservacion.getTouristGuide().getFullName() : "No asignado") + "\n" +
+                            "Número de Personas: " + nuevaReservacion.getNumberOfPeople() + "\n" +
+                            "\n" +
+                            "Recuerda que para confirmar por completo tu reserva debes confirmarla desde tu tabla de reservaciones.";
+
+                    if (esCorreoValido(client.get().getMail())) {
+                        enviarCorreoConfirmacion(client.get(), mensajeCorreo);
+                    }
+
                     if (client.get().getReservationList() == null) {
                         client.get().setReservationList(new ArrayList<>());
                         client.get().getReservationList().add(nuevaReservacion);
@@ -247,6 +276,23 @@ public class AgenciaServidor {
             Optional<Client> client = clients.stream().filter(client1 -> client1.getUserId().equals(clientID)).findFirst();
 
             if (client.isPresent()){
+
+                String mensajeCorreo = "¡Gracias por hacer la reserva!\n\n" +
+                        "Detalles de la reserva:\n" +
+                        "Paquete Turístico: " + nuevaReservacion.getTouristPackage().getName() + "\n" +
+                        "Fecha de Solicitud: " + nuevaReservacion.getRequestDate() + "\n" +
+                        "Estado de la Reserva: " + nuevaReservacion.getReservationStatus() + "\n" +
+                        "Fecha de Inicio: " + nuevaReservacion.getStartDate() + "\n" +
+                        "Fecha de Fin: " + nuevaReservacion.getEndDate() + "\n" +
+                        "Guía Turístico: " + (nuevaReservacion.getTouristGuide() != null ? nuevaReservacion.getTouristGuide().getFullName() : "No asignado") + "\n" +
+                        "Número de Personas: " + nuevaReservacion.getNumberOfPeople() + "\n" +
+                        "\n" +
+                        "Recuerda que para confirmar por completo tu reserva debes confirmarla desde tu tabla de reservaciones.";
+
+                if (esCorreoValido(client.get().getMail())) {
+                    enviarCorreoConfirmacion(client.get(), mensajeCorreo);
+                }
+
                 if (client.get().getReservationList() == null){
                     client.get().setReservationList(new ArrayList<>());
                     client.get().getReservationList().add(nuevaReservacion);
@@ -261,6 +307,46 @@ public class AgenciaServidor {
 
         serizalizarClientes();
         serializarReservaciones();
+    }
+
+    private void enviarCorreoConfirmacion(Client client, String mensajeCorreo) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com"); // Cambia esto al host del servidor SMTP que estás utilizando
+        props.put("mail.smtp.port", "587"); // Cambia esto al puerto adecuado
+
+        Authenticator auth = new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("bastonsito98@gmail.com", "tmxk phbv pvzk hdcn");
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("bastonsito98@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(client.getMail()));
+            message.setSubject("Confirmación de Reserva");
+
+            // Personaliza el cuerpo del mensaje con la información de la reserva
+            message.setText(mensajeCorreo);
+
+            Transport.send(message);
+
+            System.out.println("Correo electrónico enviado con éxito.");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean esCorreoValido(String correo) {
+        String expresionRegular = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(expresionRegular);
+        Matcher matcher = pattern.matcher(correo);
+        return matcher.matches();
     }
 
     public void calificarGuia(TouristGuide touristGuide, String estrellas) throws AtributoVacioException {
@@ -361,7 +447,7 @@ public class AgenciaServidor {
 
     }
 
-    public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating) throws AtributoVacioException {
+    public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating) {
 
         Optional<TouristGuide> touristGuide = touristGuides.stream().filter(touristGuide1 -> touristGuide1.equals(selectedGuia)).findFirst();
 
@@ -464,7 +550,7 @@ public class AgenciaServidor {
 
     }
 
-    public void agregarPaquete( TouristPackage nuevoPaquete) throws AtributoVacioException, ErrorEnIngresoFechasException {
+    public void agregarPaquete( TouristPackage nuevoPaquete) throws ErrorEnIngresoFechasException {
 
         if (nuevoPaquete.getDuration() < 0){
             log.info("Las fechas fueron incorrectamente colocadas, la fecha de inicio no puede ser después de la fecha de fin.");
@@ -525,7 +611,7 @@ public class AgenciaServidor {
     }
 
 
-    public void agregarLenguajeGuia( String lenguaje, TouristGuide touristGuide) throws RepeatedInformationException {
+    public void agregarLenguajeGuia( String lenguaje, TouristGuide touristGuide) {
 
         for (TouristGuide t : touristGuides) {
             if (t.equals(touristGuide)) {
@@ -555,7 +641,7 @@ public class AgenciaServidor {
         serializarPaquetes();
     }
 
-    public String logIn(String id, String password) throws WrongPasswordException, UserNoExistingException, AtributoVacioException {
+    public String logIn(String id, String password) throws UserNoExistingException, AtributoVacioException {
 
         if (id == null || id.isBlank() || password == null || password.isBlank()){
             log.info("se ha intentado registrar un cliente con campos obligatorios vacios");
@@ -608,7 +694,7 @@ public class AgenciaServidor {
     }
 
 
-    private String validateLogInDataAdmin(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
+    private String validateLogInDataAdmin(String id, String password, int i) throws UserNoExistingException {
 
         if (i >= admins.size()) {
 
@@ -639,7 +725,7 @@ public class AgenciaServidor {
         return "Admin";
     }
 
-    public String validateLogInDataUser(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
+    public String validateLogInDataUser(String id, String password, int i) throws UserNoExistingException {
 
         if (i >= clients.size()) {
 
