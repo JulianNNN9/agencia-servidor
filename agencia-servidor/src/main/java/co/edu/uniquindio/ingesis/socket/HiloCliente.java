@@ -58,6 +58,9 @@ public class HiloCliente implements Runnable{
                 case "getClientes":
                     getClientes(out);
                     break;
+                case "getAdmins":
+                    getAdmins(out);
+                    break;
                 case "calificarGuia":
                     calificarGuia((CalificarGuiaDatos) contenido, out);
                     break;
@@ -140,6 +143,10 @@ public class HiloCliente implements Runnable{
 
     private void getClientes(ObjectOutputStream out) throws IOException {
         out.writeObject( agencia.listarClientes() );
+    }
+
+    private void getAdmins(ObjectOutputStream out) throws IOException{
+        out.writeObject( agencia.listarAdmins() );
     }
 
     private void getReservations(ObjectOutputStream out) throws IOException {
