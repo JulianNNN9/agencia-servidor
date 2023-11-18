@@ -134,3 +134,31 @@ nov. 17, 2023 10:50:20 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor va
 INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
 nov. 17, 2023 10:52:07 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
 INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 18, 2023 8:33:42 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 8:46:44 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 8:49:03 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 8:49:47 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 8:59:03 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 9:03:36 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 9:07:47 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: Se ha intentado un inicio de sesión con contraseña incorrecta.
+nov. 18, 2023 9:12:47 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor registrarCliente
+INFORMACIÓN: se ha registrado un cliente con el user ID c1
+nov. 18, 2023 9:12:56 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 9:13:14 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 9:15:40 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 9:17:20 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 9:18:22 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.
+nov. 18, 2023 9:20:04 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id c1 ha hecho un inicio de sesión.

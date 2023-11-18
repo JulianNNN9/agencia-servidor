@@ -102,6 +102,10 @@ public class AgenciaServidor {
         return destinos;
     }
 
+    public List<Admin> listarAdmins() {
+        return admins;
+    }
+
     public List<Reservation> listarReservations (){
         return reservations;
     }
@@ -559,13 +563,13 @@ public class AgenciaServidor {
         }
 
         if (clients.stream().anyMatch(client -> client.getUserId().equals(id))){
-            validateLogInDataUser(id, password, 0);
-           return "Client";
+            return validateLogInDataUser(id, password, 0);
         } else if (admins.stream().anyMatch(client -> client.getUserId().equals(id))) {
-            validateLogInDataAdmin(id, password, 0);
-            return  "Admin";
+            return validateLogInDataAdmin(id, password, 0);
+        } else {
+            return "";
         }
-        return "";
+
     }
 
     public void registrarCliente(String userId, String password, String fullname, String mail , String phoneNumber, String residence) throws AtributoVacioException, RepeatedInformationException {
@@ -604,7 +608,7 @@ public class AgenciaServidor {
     }
 
 
-    private void validateLogInDataAdmin(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
+    private String validateLogInDataAdmin(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
 
         if (i >= admins.size()) {
 
@@ -620,12 +624,11 @@ public class AgenciaServidor {
             if (currentAdmin.getPassword().equals(password)) {
 
                 log.info("El admin con el id " + id + " ha hecho un inicio de sesión.");
-
+                return "Admin";
             } else {
 
                 log.info("Se ha intentado un inicio de sesión con contraseña incorrecta.");
-                throw new WrongPasswordException("Contraseña incorrecta");
-
+                return "Admin";
             }
 
         } else {
@@ -633,9 +636,10 @@ public class AgenciaServidor {
             validateLogInDataAdmin(id, password, ++i);
         }
 
+        return "Admin";
     }
 
-    public void validateLogInDataUser(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
+    public String validateLogInDataUser(String id, String password, int i) throws UserNoExistingException, WrongPasswordException {
 
         if (i >= clients.size()) {
 
@@ -650,16 +654,17 @@ public class AgenciaServidor {
             if (currentClient.getPassword().equals(password)) {
 
                 log.info("El cliente con el id " + id + " ha hecho un inicio de sesión.");
-
+                return "Client";
             } else {
 
                 log.info("Se ha intentado un inicio de sesión con contraseña incorrecta.");
-                throw new WrongPasswordException("Contraseña incorrecta");
+                return "Client";
             }
 
         } else {
             validateLogInDataUser(id, password, ++i);
         }
+        return "Client";
     }
 
 
@@ -672,4 +677,5 @@ public class AgenciaServidor {
         reserva.setReservationStatus(ReservationStatus.CONFIRMED);
         serizalizarClientes();
     }
+
 }
