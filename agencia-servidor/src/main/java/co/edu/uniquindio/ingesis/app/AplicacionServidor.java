@@ -22,7 +22,7 @@ public class AplicacionServidor {
 
                 //Se obtiene la conexión del cliente
                 Socket clienteSocket = serverSocket.accept();
-                System.out.println("Cliente conectado");
+                System.out.println("Conexión exitosa");
 
                 //Se crea un hilo para la conexión del cliente
                 HiloCliente hilo = new HiloCliente(clienteSocket, agenciaServidor);

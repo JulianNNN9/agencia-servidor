@@ -139,23 +139,23 @@ public class HiloCliente implements Runnable{
     }
 
     private void getClientes(ObjectOutputStream out) throws IOException {
-        out.writeObject( agencia.getClients() );
+        out.writeObject( agencia.listarClientes() );
     }
 
     private void getReservations(ObjectOutputStream out) throws IOException {
-        out.writeObject( agencia.getReservations() );
+        out.writeObject( agencia.listarReservations() );
     }
 
     private void getTouristGuides(ObjectOutputStream out) throws IOException {
-        out.writeObject( agencia.getTouristGuides() );
+        out.writeObject( agencia.listarGuias() );
     }
 
     private void getDestinos(ObjectOutputStream out) throws IOException {
-        out.writeObject( agencia.getDestinos() );
+        out.writeObject( agencia.listarDestinos() );
     }
 
     private void getTouristPackages(ObjectOutputStream out) throws IOException {
-        out.writeObject( agencia.getTouristPackages() );
+        out.writeObject( agencia.listarPaquetes() );
     }
 
     public void registrarCliente(Client cliente, ObjectOutputStream out) throws IOException {

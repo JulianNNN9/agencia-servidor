@@ -64,21 +64,25 @@ public class AgenciaServidor {
 
         //Cargar destinos
 
-            ArrayList<Destino> aux3 = (ArrayList<Destino>) archiveUtils.deserializerObjet(RUTA_DESTINOS);
+        ArrayList<Destino> aux3 = (ArrayList<Destino>) archiveUtils.deserializerObjet(RUTA_DESTINOS);
 
-            this.destinos = Objects.requireNonNullElseGet(aux3, ArrayList::new);
+        this.destinos = Objects.requireNonNullElseGet(aux3, ArrayList::new);
 
         //Cargar clientes
 
-            ArrayList<Client> aux4 = (ArrayList<Client>) archiveUtils.deserializerObjet(RUTA_CLIENTS);
+        ArrayList<Client> aux4 = (ArrayList<Client>) archiveUtils.deserializerObjet(RUTA_CLIENTS);
 
-            this.clients = Objects.requireNonNullElseGet(aux4, ArrayList::new);
+        this.clients = Objects.requireNonNullElseGet(aux4, ArrayList::new);
 
         //Cargar admins
 
-            ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
+        ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
 
-            this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
+        this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
+
+        this.admins.add(Admin.builder()
+                        .userId("admin")
+                        .password("123").build());
 
     }
 
@@ -94,24 +98,44 @@ public class AgenciaServidor {
 
     }
 
+    public List<Destino> listarDestinos (){
+        return destinos;
+    }
+
+    public List<Reservation> listarReservations (){
+        return reservations;
+    }
+
+    public List<TouristGuide> listarGuias (){
+        return touristGuides;
+    }
+
+    public List<TouristPackage> listarPaquetes (){
+        return touristPackages;
+    }
+
+    public List<Client> listarClientes(){
+        return clients;
+    }
+
     public void serializarDestinos(){
-        archiveUtils.serializerObjet("src/main/resources/persistencia/destinos.ser", destinos);
+        archiveUtils.serializerObjet(RUTA_DESTINOS, destinos);
     }
 
     public void serializarGuias(){
-        archiveUtils.serializerObjet("src/main/resources/persistencia/touristGuides.ser", touristGuides);
+        archiveUtils.serializerObjet(RUTA_TOURISTGUIDES, touristGuides);
     }
 
     public void serializarPaquetes(){
-        archiveUtils.serializerObjet("src/main/resources/persistencia/touristPackages.ser", touristPackages);
+        archiveUtils.serializerObjet(RUTA_TOURISTPACKAGE, touristPackages);
     }
 
     public void serizalizarClientes(){
-        archiveUtils.serializerObjet("src/main/resources/persistencia/clients.ser", clients);
+        archiveUtils.serializerObjet(RUTA_CLIENTS, clients);
     }
 
     public void serializarReservaciones(){
-        archiveUtils.serializerObjet("src/main/resources/persistencia/reservations.ser", reservations);
+        archiveUtils.serializerObjet(RUTA_RESERVATIONS, reservations);
     }
 
     /*
@@ -307,42 +331,27 @@ public class AgenciaServidor {
 
     }
 
-    public void modificarDestino(Destino selectedDestino, String nuevoNombre, String nuevaCiudad, String nuevaDescrpcion, String nuevaLocalDate) throws AtributoVacioException {
+    public void modificarDestino(Destino selectedDestino, String nuevoNombre, String nuevaCiudad, String nuevaDescrpcion, String nuevoClima) {
 
-        if (nuevoNombre.isEmpty() ||
-                nuevaCiudad.isEmpty() ||
-                nuevaDescrpcion.isEmpty() ||
-                nuevaLocalDate.isEmpty()) {
+        Optional<Destino> destino = destinos.stream().filter(destino1 -> destino1.equals(selectedDestino)).findFirst();
 
-            log.info("Se ha intentado agregar un destino con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
-        }
-
-        selectedDestino.setName(nuevoNombre);
-        selectedDestino.setCity(nuevaCiudad);
-        selectedDestino.setDescription(nuevaDescrpcion);
-        selectedDestino.setWeather(nuevaLocalDate);
+        destino.get().setName(nuevoNombre);
+        destino.get().setCity(nuevaCiudad);
+        destino.get().setDescription(nuevaDescrpcion);
+        destino.get().setWeather(nuevoClima);
 
         serializarDestinos();
 
     }
-    public void modificarPaquete(TouristPackage selectedPackage, String nuevoNombrePaquete, double nuevoPrecio, int nuevosCupos, LocalDate nuevaFechaInicio, LocalDate nuevaFechaFin) throws AtributoVacioException {
+    public void modificarPaquete(TouristPackage selectedPackage, String nuevoNombrePaquete, double nuevoPrecio, int nuevosCupos, LocalDate nuevaFechaInicio, LocalDate nuevaFechaFin)  {
 
-        if ( nuevoNombrePaquete == null || nuevoNombrePaquete.isEmpty() ||
-                nuevoPrecio < 0 ||
-                nuevosCupos < 0 ||
-                nuevaFechaInicio == null ||
-                nuevaFechaFin == null){
+        Optional<TouristPackage> touristPackage = touristPackages.stream().filter(touristPackage1 -> touristPackage1.equals(selectedPackage)).findFirst();
 
-            log.info("Se ha intentado agregar un destino con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
-        }
-
-        selectedPackage.setName(nuevoNombrePaquete);
-        selectedPackage.setPrice(nuevoPrecio);
-        selectedPackage.setQuota(nuevosCupos);
-        selectedPackage.setStartDate(nuevaFechaInicio);
-        selectedPackage.setEndDate(nuevaFechaFin);
+        touristPackage.get().setName(nuevoNombrePaquete);
+        touristPackage.get().setPrice(nuevoPrecio);
+        touristPackage.get().setQuota(nuevosCupos);
+        touristPackage.get().setStartDate(nuevaFechaInicio);
+        touristPackage.get().setEndDate(nuevaFechaFin);
 
         serializarPaquetes();
 
@@ -350,19 +359,12 @@ public class AgenciaServidor {
 
     public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating) throws AtributoVacioException {
 
-        if (nuevoGuideID == null || nuevoGuideID.isEmpty() ||
-                nuevoGuideName == null || nuevoGuideName.isEmpty() ||
-                nuevaExperiencia == null || nuevaExperiencia.isEmpty() ||
-                nuevoRating == null){
+        Optional<TouristGuide> touristGuide = touristGuides.stream().filter(touristGuide1 -> touristGuide1.equals(selectedGuia)).findFirst();
 
-            log.info("Se ha intentado agregar un guia con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un guia con campos vacios.");
-        }
-
-        selectedGuia.setId(nuevoGuideID);
-        selectedGuia.setFullName(nuevoGuideName);
-        selectedGuia.setExperience(nuevaExperiencia);
-        selectedGuia.setRating(Double.valueOf(nuevoRating));
+        touristGuide.get().setId(nuevoGuideID);
+        touristGuide.get().setFullName(nuevoGuideName);
+        touristGuide.get().setExperience(nuevaExperiencia);
+        touristGuide.get().setRating(Double.valueOf(nuevoRating));
 
         serializarGuias();
     }
@@ -448,18 +450,9 @@ public class AgenciaServidor {
         serializarGuias();
     }
 
-    public void agregarGuia( TouristGuide nuevoGuia) throws AtributoVacioException, RepeatedInformationException {
+    public void agregarGuia( TouristGuide nuevoGuia) {
 
-        if (nuevoGuia.getId() == null || nuevoGuia.getId().isEmpty() ||
-                nuevoGuia.getFullName() == null || nuevoGuia.getFullName().isEmpty() ||
-                nuevoGuia.getExperience() == null || nuevoGuia.getExperience().isEmpty() ||
-                nuevoGuia.getRating() == null){
-
-            log.info("Se ha intentado agregar un guia con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un guia con campos vacios.");
-        }
-
-        agenciaServidor.touristGuides.add(nuevoGuia);
+        touristGuides.add(nuevoGuia);
 
         serializarGuias();
 
@@ -469,28 +462,12 @@ public class AgenciaServidor {
 
     public void agregarPaquete( TouristPackage nuevoPaquete) throws AtributoVacioException, ErrorEnIngresoFechasException {
 
-        if (LocalDate.now().isAfter(nuevoPaquete.getStartDate())){
-
-            log.info("Las fechas fueron incorrectamente colocadas.");
-            throw new ErrorEnIngresoFechasException("Las fechas fueron incorrectamente colocadas.");
-        }
-
-        if ( nuevoPaquete.getName() == null || nuevoPaquete.getName().isEmpty() ||
-                nuevoPaquete.getPrice() == null || nuevoPaquete.getPrice().isNaN() ||
-                nuevoPaquete.getQuota() == null ||
-                nuevoPaquete.getStartDate() == null ||
-                nuevoPaquete.getEndDate() == null){
-
-            log.info("Se ha intentado agregar un destino con campos vacios.");
-            throw new AtributoVacioException("Se ha intentado agregar un destino con campos vacios.");
-        }
-
         if (nuevoPaquete.getDuration() < 0){
             log.info("Las fechas fueron incorrectamente colocadas, la fecha de inicio no puede ser después de la fecha de fin.");
             throw new ErrorEnIngresoFechasException("Las fechas fueron incorrectamente colocadas, la fecha de inicio no puede ser después de la fecha de fin.");
         }
 
-        agenciaServidor.touristPackages.add(nuevoPaquete);
+        touristPackages.add(nuevoPaquete);
 
         serializarPaquetes();
 
@@ -515,7 +492,7 @@ public class AgenciaServidor {
             throw new RepeatedInformationException("Se ha intentado crear un Destino existente.");
         }
 
-        agenciaServidor.destinos.add(nuevoDestino);
+        destinos.add(nuevoDestino);
 
         serializarDestinos();
 
