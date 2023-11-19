@@ -184,3 +184,51 @@ nov. 18, 2023 11:19:52 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor va
 INFORMACIÓN: El cliente con el id 1094882679 ha hecho un inicio de sesión.
 nov. 18, 2023 11:20:12 A. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
 INFORMACIÓN: se ha hecho una reservación del paquete AAAA para el 2023-11-19.
+nov. 18, 2023 6:06:23 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 18, 2023 6:07:32 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor registrarCliente
+INFORMACIÓN: se ha registrado un cliente con el user ID Bicho
+nov. 18, 2023 6:07:49 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:11:27 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:17:45 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:20:42 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:20:54 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AA para el 2023-11-19.
+nov. 18, 2023 6:22:24 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:22:34 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor hacerReservacion
+INFORMACIÓN: se ha hecho una reservación del paquete AAAA para el 2023-11-19.
+nov. 18, 2023 6:29:06 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 18, 2023 6:38:05 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 19, 2023 12:12:50 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 19, 2023 12:13:42 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataUser
+INFORMACIÓN: El cliente con el id Bicho ha hecho un inicio de sesión.
+nov. 19, 2023 4:15:31 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:16:18 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor agregarGuia
+INFORMACIÓN: Se ha registrado un nuevo guia.
+nov. 19, 2023 4:23:14 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:28:56 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:34:34 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:41:37 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:45:17 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:46:01 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:51:40 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:54:33 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.
+nov. 19, 2023 4:56:51 P. M. co.edu.uniquindio.ingesis.model.AgenciaServidor validateLogInDataAdmin
+INFORMACIÓN: El admin con el id admin ha hecho un inicio de sesión.

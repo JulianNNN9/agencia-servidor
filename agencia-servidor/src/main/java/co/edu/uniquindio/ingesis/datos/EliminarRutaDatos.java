@@ -14,6 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class EliminarRutaDatos implements Serializable {
-    private Optional<Destino> destinoSeleccionadoOpcional;
+    private Destino destinoSeleccionadoOpcional;
     private String selectedRuta;
 }
