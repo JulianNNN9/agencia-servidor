@@ -18,4 +18,5 @@ public class ModificarGuiaDatos implements Serializable {
     private String fullNameGuide;
     private String experience;
     private String rating;
+    private String rutaFoto;
 }

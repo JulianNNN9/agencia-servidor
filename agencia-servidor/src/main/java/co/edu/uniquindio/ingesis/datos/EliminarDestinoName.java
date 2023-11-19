@@ -14,6 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class EliminarDestinoName implements Serializable {
-    private Optional<TouristPackage> packageSeleccionadoOpcional;
+    private TouristPackage packageSeleccionadoOpcional;
     private String selectedDestino;
 }

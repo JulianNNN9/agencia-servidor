@@ -158,34 +158,48 @@ public class AgenciaServidor {
      * Primer método adicional
      */
 
-    public void recompensasPorReservas(Client client){
+    public String recompensasPorReservas(Client client){
 
-        if (client.getReservationList().size() > 2){
-            /* TODO implementar un metodo que avise al cliente que en la próximo reserva tendrá 10% de descuento */
+        int reservacionesConfirmadas = 0;
+
+        if (client.getReservationList() != null){
+            reservacionesConfirmadas = (int) client.getReservationList().stream().filter(reservation -> reservation.getReservationStatus().equals(ReservationStatus.CONFIRMED)).count();
+
         }
 
-        if (client.getReservationList().size() > 4){
-            /* TODO implementar un metodo que avise al cliente que en la próximo reserva tendrá 20% de descuento */
+        if (reservacionesConfirmadas > 0){
+
+            if (reservacionesConfirmadas > 2){
+                client.getDescuentos().add(0.1);
+                return "¡Tenemos un descuento para ti del 10% en tu próxima reserva!";
+            }
+
+            if (reservacionesConfirmadas > 4){
+                client.getDescuentos().add(0.2);
+                return "¡Tenemos un descuento para ti del 20% en tu próxima reserva!";
+            }
+
+            if (reservacionesConfirmadas > 6){
+                client.getDescuentos().add(0.3);
+                return "¡Tenemos un descuento para ti del 30% en tu próxima reserva!";
+            }
         }
 
-        if (client.getReservationList().size() > 7){
-            /* TODO implementar un metodo que avise al cliente que en la próximo reserva tendrá 30% de descuento */
-        }
 
-        /* TODO el ciente debería tener una nueva lista llamada descuentos, se deben ir añadiendo los descuentos según los gana y validarlos al momento de reservar y aplicar ese descuento*/
+        return "";
     }
 
     /**
      * Segundo método adicinal
      */
 
-    public void alertaOfertasEspeciales(){
-        /* TODO implementar un metodo que avise al cliente pos descuentos (Fin de año, navidad, semana santa)*/
+    public String alertaOfertasEspeciales(){
+        return "";
     }
 
     public void hacerReservacion(String clientID, String selectedGuia, String nroCupos, String selectedPackageName) throws AtributoVacioException, CuposInvalidosException {
 
-        Optional<TouristPackage> aPackage = touristPackages.stream().filter(touristPackage -> touristPackage.getName().equals(selectedPackageName)).findFirst();
+        Optional<TouristPackage> paqueteSeleccionado = touristPackages.stream().filter(touristPackage -> touristPackage.getName().equals(selectedPackageName)).findFirst();
 
         if (nroCupos == null || nroCupos.isEmpty() ||
                 selectedPackageName == null || selectedPackageName.isEmpty()) {
@@ -205,6 +219,8 @@ public class AgenciaServidor {
                     throw new CuposInvalidosException("Cupos inválidos.");
                 }
 
+                paqueteSeleccionado.ifPresent(aPackage -> aPackage.setPrice(aPackage.getPrice() - Double.parseDouble(nroCupos)));
+
                 Optional<TouristGuide> touristGuide = touristGuides.stream().filter(touristGuide1 -> touristGuide1.getFullName().equals(selectedGuia)).findFirst();
 
                 Reservation nuevaReservacion = Reservation.builder()
@@ -223,8 +239,16 @@ public class AgenciaServidor {
 
                 if (client.isPresent()) {
 
+                    double precio = 0.0;
+
+                    if (client.get().getDescuentos() != null){
+                        precio = paqueteSeleccionado.get().getPrice() - paqueteSeleccionado.get().getPrice() * client.get().getDescuentos().get(0);
+                        client.get().getDescuentos().remove(0);
+                    }
+
                     String mensajeCorreo = "¡Gracias por hacer la reserva!\n\n" +
                             "Detalles de la reserva:\n" +
+                            "Precio del paquete reservado" + precio + "\n" +
                             "Paquete Turístico: " + nuevaReservacion.getTouristPackage().getName() + "\n" +
                             "Fecha de Solicitud: " + nuevaReservacion.getRequestDate() + "\n" +
                             "Estado de la Reserva: " + nuevaReservacion.getReservationStatus() + "\n" +
@@ -447,7 +471,7 @@ public class AgenciaServidor {
 
     }
 
-    public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating) {
+    public void modificarGuia(TouristGuide selectedGuia, String nuevoGuideID, String nuevoGuideName, String nuevaExperiencia, String nuevoRating, String rutaFoto) {
 
         Optional<TouristGuide> touristGuide = touristGuides.stream().filter(touristGuide1 -> touristGuide1.equals(selectedGuia)).findFirst();
 
@@ -455,6 +479,7 @@ public class AgenciaServidor {
         touristGuide.get().setFullName(nuevoGuideName);
         touristGuide.get().setExperience(nuevaExperiencia);
         touristGuide.get().setRating(Double.valueOf(nuevoRating));
+        touristGuide.get().setRutaFoto(rutaFoto);
 
         serializarGuias();
     }
@@ -483,42 +508,50 @@ public class AgenciaServidor {
 
     }
 
-    public void eliminarDestinoName(Optional<TouristPackage> touristPackage, String destinoABorrar) {
+    public void eliminarDestinoName(TouristPackage touristPackage, String destinoABorrar) {
 
-        if (touristPackage.isPresent()){
-            List<String> destinosSinEliminar = touristPackage.get().getDestinosName().stream().filter(s -> !s.equals(destinoABorrar)).toList();
+        Optional<TouristPackage> paqueteSeleccionado = touristPackages.stream().filter(touristPackage1 -> touristPackage1.equals(touristPackage)).findFirst();
 
-            touristPackage.get().getDestinosName().clear();
-            touristPackage.get().getDestinosName().addAll(destinosSinEliminar );
+        if (paqueteSeleccionado.isPresent()){
+
+            List<String> destinosSinEliminar = paqueteSeleccionado.get().getDestinosName().stream().filter(s -> !s.equals(destinoABorrar)).toList();
+
+            paqueteSeleccionado.get().getDestinosName().clear();
+            paqueteSeleccionado.get().getDestinosName().addAll(destinosSinEliminar );
 
             serializarPaquetes();
         }
 
+
     }
 
-    public void eliminarRuta(Optional<Destino> destino, String rutaABorrar){
+    public void eliminarRuta(Destino destino, String rutaABorrar){
 
-        if (destino.isPresent()) {
+        Optional<Destino> destinoSeleccionado = destinos.stream().filter(destino1 -> destino1.equals(destino)).findFirst();
+
+        if (destinoSeleccionado.isPresent()) {
 
             List<String> rutasSinEliminar;
 
-            rutasSinEliminar = destino.get().getImagesHTTPS().stream().filter(s -> !s.equals(rutaABorrar)).toList();
+            rutasSinEliminar = destinoSeleccionado.get().getImagesHTTPS().stream().filter(s -> !s.equals(rutaABorrar)).toList();
 
-            destino.get().getImagesHTTPS().clear();
-            destino.get().getImagesHTTPS().addAll(rutasSinEliminar);
+            destinoSeleccionado.get().getImagesHTTPS().clear();
+            destinoSeleccionado.get().getImagesHTTPS().addAll(rutasSinEliminar);
 
             serializarDestinos();
         }
     }
 
-    public void eliminarLenguaje(Optional<TouristGuide> touristGuide, String lenguajeABorrar){
+    public void eliminarLenguaje(TouristGuide touristGuide, String lenguajeABorrar){
 
-        if (touristGuide.isPresent()) {
+        Optional<TouristGuide> guiaSeleccionado = touristGuides.stream().filter(touristGuide1 -> touristGuide1.equals(touristGuide)).findFirst();
 
-            List<String> languajeSinEliminar = touristGuide.get().getLanguages().stream().filter(s -> !s.equals(lenguajeABorrar)).toList();
+        if (guiaSeleccionado.isPresent()) {
 
-            touristGuide.get().getLanguages().clear();
-            touristGuide.get().getLanguages().addAll(languajeSinEliminar);
+            List<String> languajeSinEliminar = guiaSeleccionado.get().getLanguages().stream().filter(s -> !s.equals(lenguajeABorrar)).toList();
+
+            guiaSeleccionado.get().getLanguages().clear();
+            guiaSeleccionado.get().getLanguages().addAll(languajeSinEliminar);
 
             serializarGuias();
         }
@@ -526,7 +559,9 @@ public class AgenciaServidor {
 
 
     public void eliminarDestino(Destino selectedDestino) {
+
         destinos.removeIf(destino -> destino.equals(selectedDestino));
+
         serializarDestinos();
     }
 

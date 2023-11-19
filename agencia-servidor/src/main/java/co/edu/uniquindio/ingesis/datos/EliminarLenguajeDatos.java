@@ -14,6 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class EliminarLenguajeDatos implements Serializable {
-    private Optional<TouristGuide> guideSeleccionadoOpcional;
+    private TouristGuide guideSeleccionadoOpcional;
     private String selectedLenguaje;
 }

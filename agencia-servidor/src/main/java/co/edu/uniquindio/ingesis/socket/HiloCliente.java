@@ -123,13 +123,13 @@ public class HiloCliente implements Runnable{
                     break;
                 case "confirmarReserva":
                     confirmarReserva((Reservation) contenido, out);
-                    break;/*
+                    break;
                 case "recompensasPorReservas":
                     recompensasPorReservas((Client) contenido, out);
                     break;
                 case "alertaOfertasEspeciales":
-                    alertaOfertasEspeciales();
-                    break; */
+                    alertaOfertasEspeciales(out);
+                    break;
             }
 
             //Se cierra la conexión del socket para liberar los recursos asociados
@@ -221,7 +221,7 @@ public class HiloCliente implements Runnable{
 
     public void modificarGuia(ModificarGuiaDatos modificarGuiaDatos, ObjectOutputStream out) throws IOException {
         try {
-            agencia.modificarGuia(modificarGuiaDatos.getSelectedGuia(), modificarGuiaDatos.getGuideID(), modificarGuiaDatos.getFullNameGuide(), modificarGuiaDatos.getExperience(), modificarGuiaDatos.getRating());
+            agencia.modificarGuia(modificarGuiaDatos.getSelectedGuia(), modificarGuiaDatos.getGuideID(), modificarGuiaDatos.getFullNameGuide(), modificarGuiaDatos.getExperience(), modificarGuiaDatos.getRating(), modificarGuiaDatos.getRutaFoto());
             out.writeObject("Se ha modificado un guia");
         } catch (Exception e){
             out.writeObject(e.getMessage());
@@ -373,8 +373,7 @@ public class HiloCliente implements Runnable{
 
     public void recompensasPorReservas(Client client, ObjectOutputStream out) throws IOException {
         try {
-            agencia.recompensasPorReservas(client);
-            out.writeObject("Se ha recompensado un cliente");
+            out.writeObject(agencia.recompensasPorReservas(client));
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
@@ -382,8 +381,7 @@ public class HiloCliente implements Runnable{
 
     public void alertaOfertasEspeciales(ObjectOutputStream out) throws IOException {
         try {
-            agencia.alertaOfertasEspeciales();
-            out.writeObject("Se ha alertado de ofertas a un cliente");
+            out.writeObject(agencia.alertaOfertasEspeciales());
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }

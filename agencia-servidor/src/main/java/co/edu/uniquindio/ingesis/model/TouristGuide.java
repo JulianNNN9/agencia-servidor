@@ -19,5 +19,6 @@ public class TouristGuide implements Serializable {
     private String experience;
     private List<Integer> ratingList;
     private Double rating;
+    private String rutaFoto;
 
 }

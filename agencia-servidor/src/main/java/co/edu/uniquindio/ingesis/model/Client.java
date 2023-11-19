@@ -17,5 +17,6 @@ public class Client extends User implements Serializable {
     private String phoneNumber;
     private String residence;
     private List<Reservation> reservationList = new ArrayList<>();
+    private List<Double> descuentos = new ArrayList<>();
 
 }
