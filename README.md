@@ -4,7 +4,7 @@
 
 ### Descripción
 
-El servidor es la parte central del sistema que gestiona las solicitudes de los clientes y realiza las operaciones necesarias. Está implementado en [lenguaje de programación] y utiliza [librerías o frameworks específicos] para la comunicación y gestión de conexiones.
+El servidor es la parte central del sistema que gestiona las solicitudes de los clientes y realiza las operaciones necesarias. Está implementado en javafx y utiliza sockets para la comunicación y gestión de conexiones.
 
 ### Características
 
