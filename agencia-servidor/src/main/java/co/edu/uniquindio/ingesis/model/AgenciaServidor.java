@@ -219,8 +219,6 @@ public class AgenciaServidor {
                     throw new CuposInvalidosException("Cupos inválidos.");
                 }
 
-                paqueteSeleccionado.ifPresent(aPackage -> aPackage.setPrice(aPackage.getPrice() - Double.parseDouble(nroCupos)));
-
                 Optional<TouristGuide> touristGuide = touristGuides.stream().filter(touristGuide1 -> touristGuide1.getFullName().equals(selectedGuia)).findFirst();
 
                 Reservation nuevaReservacion = Reservation.builder()
@@ -239,7 +237,7 @@ public class AgenciaServidor {
 
                 if (client.isPresent()) {
 
-                    double precio = 0.0;
+                    double precio = paqueteSeleccionado.get().getPrice();
 
                     if (client.get().getDescuentos() != null){
                         precio = paqueteSeleccionado.get().getPrice() - paqueteSeleccionado.get().getPrice() * client.get().getDescuentos().get(0);
