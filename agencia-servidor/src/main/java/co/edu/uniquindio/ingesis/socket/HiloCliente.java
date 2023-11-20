@@ -168,7 +168,7 @@ public class HiloCliente implements Runnable{
     public void registrarCliente(Client cliente, ObjectOutputStream out) throws IOException {
         try {
             agencia.registrarCliente(cliente.getUserId(), cliente.getPassword(), cliente.getFullName(), cliente.getMail(), cliente.getPhoneNumber(), cliente.getResidence());
-            out.writeObject("Cliente agregado correctamente.");
+            out.writeObject("Te has registrado correctamente.");
         }catch (Exception e){
             out.writeObject(e.getMessage());
         }
@@ -177,7 +177,7 @@ public class HiloCliente implements Runnable{
     public void hacerReservacion(ReservaDatos reservaDatos, ObjectOutputStream out) throws IOException {
         try{
             agencia.hacerReservacion(reservaDatos.getClientID(), reservaDatos.getSelectedGuia(), reservaDatos.getNroCupos(), reservaDatos.getSelectedPackageName());
-            out.writeObject("Se ha hecho la reservación.");
+            out.writeObject("Has hecho una reservación éxitosa.");
         } catch (Exception e) {
             out.writeObject(e.getMessage());
         }
@@ -231,7 +231,7 @@ public class HiloCliente implements Runnable{
     public void modificarPerfil(ModificarPerfilDatos modificarPerfilDatos, ObjectOutputStream out) throws IOException {
         try {
             agencia.modificarPerfil(modificarPerfilDatos.getClientID(), modificarPerfilDatos.getNuevoNombre(), modificarPerfilDatos.getNuevoMail(), modificarPerfilDatos.getNuevoNumero(), modificarPerfilDatos.getNuevaResidencia());
-            out.writeObject("Se ha modificado su perfil");
+            out.writeObject("Ha modificado su perfil");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
@@ -356,7 +356,7 @@ public class HiloCliente implements Runnable{
     public void cancelarReserva(Reservation reserva, ObjectOutputStream out) throws IOException {
         try {
             agencia.cancelarReserva(reserva);
-            out.writeObject("Se ha cancelado una reserva");
+            out.writeObject("Has cancelado una reserva");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
@@ -365,7 +365,7 @@ public class HiloCliente implements Runnable{
     public void confirmarReserva(Reservation reserva, ObjectOutputStream out) throws IOException {
         try {
             agencia.confirmarReserva(reserva);
-            out.writeObject("Se ha confirmado una reserva");
+            out.writeObject("Has confirmado una reserva");
         } catch (Exception e){
             out.writeObject(e.getMessage());
         }
