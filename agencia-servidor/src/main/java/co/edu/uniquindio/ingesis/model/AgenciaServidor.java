@@ -86,10 +86,6 @@ public class AgenciaServidor {
 
         //Cargar admins
 
-        //ArrayList<Admin> aux5 = (ArrayList<Admin>) archiveUtils.deserializerObjet(RUTA_ADMINS);
-
-        //this.admins = Objects.requireNonNullElseGet(aux5, ArrayList::new);
-
         this.admins = new ArrayList<>();
 
         this.admins.add(Admin.builder()
@@ -193,8 +189,45 @@ public class AgenciaServidor {
      * Segundo método adicinal
      */
 
-    public String alertaOfertasEspeciales(){
-        return "";
+    public String alertaOfertasEspeciales() {
+        // Decide aleatoriamente si aplicar o no el descuento (50% de probabilidad)
+        boolean aplicarDescuento = new Random().nextBoolean();
+
+        if (aplicarDescuento) {
+            // Aplica el descuento reduciendo los precios a la mitad
+            aplicarDescuentoRecursivo(touristPackages, 0);
+            return "¡Descuento aplicado! Los precios de los paquetes son reducidos a la mitad, ¡Aprovecha y reserva!";
+        } else {
+            // Puedes realizar otras acciones según tus necesidades
+            return verificarDiaSiguienteRecursivo(0);
+        }
+    }
+
+    private void aplicarDescuentoRecursivo(List<TouristPackage> packages, int index) {
+        if (index < packages.size()) {
+            TouristPackage touristPackage = packages.get(index);
+            // Almacena el precio original antes de aplicar el descuento
+            touristPackage.setPrecioOriginal(touristPackage.getPrice());
+            touristPackage.setPrice(touristPackage.getPrice() / 2);
+            aplicarDescuentoRecursivo(packages, index + 1);
+        }
+    }
+
+    private String verificarDiaSiguienteRecursivo(int index) {
+        LocalDate diaSiguiente = LocalDate.now().plusDays(1);
+
+        if (index < touristPackages.size()) {
+            TouristPackage touristPackage = touristPackages.get(index);
+            if (touristPackage.getFechaDescuento() != null && touristPackage.getFechaDescuento().isEqual(diaSiguiente)) {
+                // Restaura el precio original
+                touristPackage.setPrice(touristPackage.getPrecioOriginal());
+                return "Fin del día. Los precios han vuelto a la normalidad.";
+            } else {
+                return verificarDiaSiguienteRecursivo(index + 1);
+            }
+        } else {
+            return "Fin del día. Los precios continúan con el descuento aplicado.";
+        }
     }
 
     public void hacerReservacion(String clientID, String selectedGuia, String nroCupos, String selectedPackageName) throws AtributoVacioException, CuposInvalidosException {
@@ -624,54 +657,64 @@ public class AgenciaServidor {
         }
 
     public void agregarImagenDestino(String ruta, Destino destino) throws RutaInvalidaException {
-
-        File archivo = new File(ruta);
-        boolean esRutaDeArchivo = archivo.exists() && archivo.isFile();
-
-        if (!esRutaDeArchivo){
-            log.severe("Se ha intentado agregar una imagen invalida a un destino.");
-            throw new RutaInvalidaException("Se ha intentado agregar una imagen invalida a un destino.");
-        }
-
-        for (Destino d : destinos) {
-            if (d.equals(destino)) {
-                d.getImagesHTTPS().add(ruta);
-                break;
-            }
-        }
-
+        agregarImagenDestinoRecursivo(ruta, destino, 0);
         serializarDestinos();
     }
 
+    private void agregarImagenDestinoRecursivo(String ruta, Destino destino, int index) throws RutaInvalidaException {
 
-    public void agregarLenguajeGuia( String lenguaje, TouristGuide touristGuide) {
+        if (index < destinos.size()) {
+            Destino d = destinos.get(index);
+            if (d.equals(destino)) {
+                File archivo = new File(ruta);
+                boolean esRutaDeArchivo = archivo.exists() && archivo.isFile();
 
-        for (TouristGuide t : touristGuides) {
-            if (t.equals(touristGuide)) {
-                t.getLanguages().add(lenguaje);
-                break;
+                if (!esRutaDeArchivo) {
+                    log.severe("Se ha intentado agregar una imagen inválida a un destino.");
+                    throw new RutaInvalidaException("Se ha intentado agregar una imagen inválida a un destino.");
+                }
+
+                d.getImagesHTTPS().add(ruta);
             }
+            agregarImagenDestinoRecursivo(ruta, destino, index + 1);
         }
+    }
 
+
+    public void agregarLenguajeGuia(String lenguaje, TouristGuide touristGuide) {
+        agregarLenguajeGuiaRecursivo(lenguaje, touristGuide, 0);
         serializarGuias();
     }
 
-    public void agregarDestinoEnPaquete( String selectedItem, TouristPackage touristPackage) {
+    private void agregarLenguajeGuiaRecursivo(String lenguaje, TouristGuide touristGuide, int index) {
+        if (index < touristGuides.size()) {
+            TouristGuide t = touristGuides.get(index);
+            if (t.equals(touristGuide)) {
+                t.getLanguages().add(lenguaje);
+            }
+            agregarLenguajeGuiaRecursivo(lenguaje, touristGuide, index + 1);
+        }
+    }
 
-        for (TouristPackage t : touristPackages) {
+    public void agregarDestinoEnPaquete(String selectedItem, TouristPackage touristPackage) {
+        agregarDestinoEnPaqueteRecursivo(selectedItem, touristPackage, 0);
+        serializarPaquetes();
+    }
+
+    private void agregarDestinoEnPaqueteRecursivo(String selectedItem, TouristPackage touristPackage, int index) {
+
+        if (index < touristPackages.size()) {
+            TouristPackage t = touristPackages.get(index);
             if (t.equals(touristPackage)) {
-                if (t.getDestinosName() != null){
+                if (t.getDestinosName() != null) {
                     t.getDestinosName().add(selectedItem);
                 } else {
                     t.setDestinosName(new ArrayList<>());
                     t.getDestinosName().add(selectedItem);
                 }
-
-                break;
             }
+            agregarDestinoEnPaqueteRecursivo(selectedItem, touristPackage, index + 1);
         }
-
-        serializarPaquetes();
     }
 
     public String logIn(String id, String password) throws UserNoExistingException, AtributoVacioException {
