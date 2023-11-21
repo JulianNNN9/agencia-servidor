@@ -17,9 +17,11 @@ public class TouristPackage implements Serializable {
     private List<String> destinosName = new ArrayList<>();
     private String name;
     private Double price;
+    private Double precioOriginal;
     private Integer quota;
     private LocalDate startDate;
     private LocalDate endDate;
     private long duration;
+    private LocalDate fechaDescuento;
 
 }
